@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Administrador</title>
+</head>
+<body>
+    <h1>Área do Administrador</h1>
+    
+    <h2>Bem-vindo, {{ admin.nome }} (Nível: {{ admin.nivel }})</h2>
+
+    {% if admin.nivel == 2 %}
+        <h3>Gerenciar Administradores</h3>
+        <a href="/adicionar_admin">Adicionar Administrador</a>
+        <a href="/listar_admins">Listar Administradores</a>
+    {% endif %}
+
+    {% if admin.nivel >= 1 %}
+        <h3>Gerenciar Militares</h3>
+        <a href="/listar_ferias">Visualizar Relação de Férias</a>
+    {% endif %}
+
+    {% if admin.nivel == 0 %}
+        <h3>Funções Disponíveis</h3>
+        <a href="/listar_ferias">Emitir Relação de Férias</a>
+    {% endif %}
+
+    <br><br>
+    <a href="/logout">Logout</a>
+</body>
+</html>

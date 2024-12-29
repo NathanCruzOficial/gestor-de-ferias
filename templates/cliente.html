@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Cliente</title>
+</head>
+<body>
+    <h1>Bem-vindo, {{ cliente['nome'] }}!</h1>
+    <p>Posto: {{ cliente['posto'] }}</p>
+    <p>Dias disponíveis: {{ cliente['dias_disponiveis'] }} dias</p>
+
+    <h2>Registrar Férias</h2>
+    <form action="{{ url_for('registrar_ferias') }}" method="post">
+        <label for="inicio">Data de Início:</label>
+        <input type="date" name="inicio" id="inicio" required><br>
+        
+        <label for="fim">Data de Fim:</label>
+        <input type="date" name="fim" id="fim" required><br>
+        
+        <label for="destino">Destino:</label>
+        <input type="text" name="destino" id="destino" required><br>
+        
+        <button type="submit">Registrar Férias</button>
+    </form>
+
+    <h2>Histórico de Férias</h2>
+    <ul>
+        {% for registro in cliente['historico'] %}
+            <li>{{ registro['tipo'] }} - {{ registro['dias'] }} dias - {{ registro['data'] }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('logout') }}">Sair</a>
+</body>
+</html>

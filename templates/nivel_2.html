@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área Administrativa - Nível 2</title>
+</head>
+<body>
+    <h1>Área Administrativa - Nível 2</h1>
+    <h2>Férias Registradas</h2>
+    <ul>
+        {% for registro in ferias %}
+            <li>{{ registro['cliente'] }} - {{ registro['inicio'] }} até {{ registro['fim'] }} - Destino: {{ registro['destino'] }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Administradores</h2>
+    <ul>
+        {% for admin in admins %}
+            <li>{{ admin['username'] }} - Nível: {{ admin['nivel'] }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Adicionar Administrador</h2>
+    <form action="{{ url_for('adicionar_admin') }}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required><br>
+        
+        <label for="nivel">Nível:</label>
+        <select name="nivel" id="nivel">
+            <option value="0">Nível 0</option>
+            <option value="1">Nível 1</option>
+            <option value="2">Nível 2</option>
+        </select><br>
+
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <h2>Deletar Administrador</h2>
+    <ul>
+        {% for admin in admins %}
+            <li>
+                {{ admin['username'] }} - Nível: {{ admin['nivel'] }}
+                <a href="{{ url_for('deletar_admin', username=admin['username']) }}">Deletar</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('logout') }}">Sair</a>
+</body>
+</html>

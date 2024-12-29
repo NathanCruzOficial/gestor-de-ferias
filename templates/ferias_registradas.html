@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Férias Registradas</title>
+</head>
+<body>
+    <h1>Férias Registradas</h1>
+    <p>Início: {{ ferias['inicio'] }}</p>
+    <p>Fim: {{ ferias['fim'] }}</p>
+    <p>Destino: {{ ferias['destino'] }}</p>
+
+    <a href="{{ url_for('index') }}">Voltar</a>
+</body>
+</html>
