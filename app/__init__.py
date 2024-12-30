@@ -1,0 +1,26 @@
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+
+app = Flask(__name__)
+app.secret_key = 'segredo'
+app.config.from_object("config")
+
+# Inicialização do banco de dados e migração
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+from app.controllers import home
+
+# Definindo o comando CLI para migrações
+@app.cli.command("db_migrate")
+def db_migrate():
+    """Comando personalizado para gerenciar migrações de banco de dados."""
+    from flask_migrate import upgrade, migrate, init
+    init()
+    migrate()
+    upgrade()
+
+# Você pode adicionar mais comandos personalizados conforme necessário.
+
