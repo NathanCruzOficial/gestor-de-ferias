@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.secret_key = 'segredo'
+app.config['SECRET_KEY'] = 'segredo'
 app.config.from_object("config")
 
 # Inicialização do banco de dados e migração
@@ -15,6 +16,7 @@ migrate = Migrate(app, db)
 
 lm = LoginManager()
 lm.init_app(app)
+
 
 from app.controllers import home
 from app.models import tables

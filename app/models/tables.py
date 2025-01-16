@@ -1,5 +1,10 @@
-from app import db
+from app import db ,lm
 from flask_login import UserMixin
+
+# Defina a função de carregamento do usuário
+@lm.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))  # Recupera o usuário pelo ID (a chave primária)
 
 class Users(db.Model, UserMixin):
     __tablename__ = "Usuarios"
@@ -25,6 +30,9 @@ class Users(db.Model, UserMixin):
         self.dias_disp = dias_disp
         self.email = email
         self.telefone = telefone
+
+    def get_id(self):
+        return str(self.id)  # Retorne o ID como string, necessário para o Flask-Login
     
     def __repr__(self):
         return f"<User {self.id}>"

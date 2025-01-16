@@ -15,30 +15,48 @@
       <div class="form-floating">
         {{ form.username(class="form-control", _name="username", id="username", placeholder="Usuário") }}
         <label for="username">{{ form.username.label }}:</label>
-        {% if form.username.errors %}
-          <div class="alert alert-danger" role="alert">
-            <ul>
-              {% for error in form.username.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
       </div>
 
       <!-- password -->
       <div class="form-floating">
-        {{ form.password(class="form-control", _name="password", id="floatingPassword", placeholder="Senha") }}
+        {{ form.password(class="form-control", _name="password", id="password", placeholder="senha") }}
         <label for="password">{{ form.password.label }}:</label>
-        {% if form.password.errors %}
-          <div class="alert alert-danger" role="alert">
-            <ul>
-              {% for error in form.password.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
+      </div>
+
+      <!-- posto_grad -->
+      <div class="form-floating">
+        {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="senha") }}
+        <label for="posto_grad">{{ form.posto_grad.label }}:</label>
+      </div>
+
+       <!-- nome_completo -->
+       <div class="form-floating">
+        {{ form.nome_completo(class="form-control", _name="nome_completo", id="nome_completo", placeholder="senha") }}
+        <label for="Nome Completo">{{ form.nome_completo.label }}:</label>
+      </div>
+
+      <!-- data_nascimento -->
+      <div class="form-floating">
+        {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
+        <label for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
+      </div>
+      
+      <!-- nivel -->
+      <div class="form-floating">
+        {{ form.nivel(class="form-control", _name="nivel", id="nivel", placeholder="senha") }}
+        <label for="nivel">{{ form.nivel.label }}:</label>
+      </div>
+
+      <!-- email -->
+      <div class="form-floating">
+        {{ form.email(class="form-control", _name="email", id="email", placeholder="senha") }}
+        <label for="email">{{ form.email.label }}:</label>
+      </div>
+
+      <!-- telefone -->
+      <div class="form-floating">
+        {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="senha") }}
+        <label for="telefone">{{ form.telefone.label }}:</label>
       </div>
 
       <!-- submit -->
@@ -46,7 +64,6 @@
       {{ form.submit(class="btn btn-primary w-100 py-2") }}
       </div>
 
-      <p class="mt-5 mb-3 text-body-secondary">&copy; 2025 - Nathan da Cruz Cardoso</p>
     </form>
   </main> 
 </body>
