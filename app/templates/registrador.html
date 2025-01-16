@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
+{% block head %}
+    <link href="{{ url_for('static', filename = 'css/sign-in.css')}}" rel="stylesheet" >
+{% endblock %}
 
-{% block content %}      
-  <main class="form-signin w-100 m-auto">
+{% block content %}
+  <main class="form-signin m-auto" >
 
     <!-- formulário -->
-    <form action="{{ url_for('login') }}" method="post">
+    <form action="{{ url_for('register') }}" method="post">
       {{ form.csrf_token }}
-      <img class="mb-4" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu9qlwq8emfz6j2TYFh33GMriFX_H6InsYMw&s" alt="" width="72" height="auto">
-      <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
+      <h1 class="h3 mb-3 fw-normal">Registrar Usuário</h1>
 
       <!-- username -->
       <div class="form-floating">
@@ -38,18 +40,13 @@
           </div>
         {% endif %}
       </div>
-      
-      <!-- remember-me -->
-      <div class="form-check text-start my-3">
-        <label class="form-check-label" for="flexCheckDefault">
-          {{ form.remember_me(class="form-check-input",id="flexCheckDefault", type="checkbox") }} Remember me
-        </label>
-      </div>
 
       <!-- submit -->
       </div class="form-floating">
       {{ form.submit(class="btn btn-primary w-100 py-2") }}
       </div>
+
+      <p class="mt-5 mb-3 text-body-secondary">&copy; 2025 - Nathan da Cruz Cardoso</p>
     </form>
   </main> 
 </body>

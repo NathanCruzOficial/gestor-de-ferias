@@ -5,13 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Document{% endblock %}</title>
     <link href="{{ url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet" >
-    {% block link %}
+    <link href="{{ url_for('static', filename = 'sticky-footer.css')}}" rel="stylesheet" >
+    <link href="{{ url_for('static', filename = 'css/sign-in.css')}}" rel="stylesheet" >
+
+    {% block head %}
     {% endblock %}
+    
 
 </head>
+    <body>
 
+        {% include "header.html" %}
+
+        <!-- menssagem de aviso -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-warning" role="alert">
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endwith %}
+        
         {% block content %}
-        {% endblock %} 
+        {% endblock %}
+
+        {% include "footer.html" %}
 
         <script href="{{ url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
     </body>

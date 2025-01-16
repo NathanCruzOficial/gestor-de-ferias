@@ -1,6 +1,7 @@
 from app import db
+from flask_login import UserMixin
 
-class Users(db.Model):
+class Users(db.Model, UserMixin):
     __tablename__ = "Usuarios"
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -13,9 +14,8 @@ class Users(db.Model):
     dias_disp = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(30), nullable=False)
     telefone = db.Column(db.String(30), nullable=False)
-
-    def __init__(self, id, username, password, posto_grad, nome_completo, data_nascimento, nivel, dias_disp, email, telefone):
-        self.id = id
+   
+    def __init__(self, username, password, posto_grad, nome_completo, data_nascimento, nivel, dias_disp, email, telefone):
         self.username = username
         self.password = password
         self.posto_grad = posto_grad
@@ -33,15 +33,14 @@ class Vacations(db.Model):
     __tablename__ = "Ferias"
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('Usuarios.id'), nullable=False)  # Correção de ForeignKey
+    user_id = db.Column(db.Integer, db.ForeignKey('Usuarios.id'), nullable=False)
     data_inicio = db.Column(db.Date, nullable=False)
     data_fim = db.Column(db.Date, nullable=False)
     destino = db.Column(db.String(30), nullable=False)
     status = db.Column(db.Integer, nullable=False, default=0)
-    user = db.relationship("Users", foreing_keys=user_id)
+    user = db.relationship("Users", foreign_keys=[user_id])
 
-    def __init__(self, id, user_id, data_inicio, data_fim, destino, status=0):
-        self.id = id
+    def __init__(self, user_id, data_inicio, data_fim, destino, status=0):
         self.user_id = user_id
         self.data_inicio = data_inicio
         self.data_fim = data_fim

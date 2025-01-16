@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -11,7 +12,12 @@ app.config.from_object("config")
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+
+lm = LoginManager()
+lm.init_app(app)
+
 from app.controllers import home
+from app.models import tables
 
 # Definindo o comando CLI para migrações
 @app.cli.command("db_migrate")
