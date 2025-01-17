@@ -1,0 +1,42 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}    
+<!-- ================================================================================= -->
+
+<div class="container mt-4">
+  <h2>Lista de Usuários</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Email</th>
+        <th scope="col">Senha</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <!-- Exibe o botão de deletar para todos, exceto o usuário logado -->
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.password }}</td>
+            <td>
+              {% if current_user.id != user.id %}
+                <form action="{{ url_for('user.delete_user', user_id=user.id) }}" method="POST">
+                  <button type="submit" class="btn btn-danger">Deletar</button>
+                </form>
+              {% else %}
+                <button class="btn btn-secondary" disabled>Deletar</button>
+              {% endif %}
+            </td>
+          </tr>          
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ================================================================================= -->
+{% endblock %}

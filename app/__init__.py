@@ -16,6 +16,7 @@ migrate = Migrate(app, db)
 
 lm = LoginManager()
 lm.init_app(app)
+lm.login_view = 'auth.login'
 
 
 from app.controllers import home

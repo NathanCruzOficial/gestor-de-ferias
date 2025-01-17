@@ -4,6 +4,8 @@
 
 .container {
   width: auto;
-  max-width: 680px;
+  max-width: auto;
   padding: 0 15px;
+  display: flex;
+  flex-direction: column;
 }

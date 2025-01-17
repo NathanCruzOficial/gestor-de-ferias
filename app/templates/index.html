@@ -1,7 +1,0 @@
-{% extends 'base.html' %}
-
-{% block content %}      
-
-<h1>Olá {{ current_user.nome_completo if current_user.is_authenticated else "Visitante" }}, seja bem vindo!</h1>
-
-{% endblock %}     

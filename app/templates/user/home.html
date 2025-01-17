@@ -1,0 +1,9 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}    
+
+<h1>Bem-vindo, {{ current_user.username }}!</h1>
+    <p>Posto: {{ current_user.posto_grad }}</p>
+    <p>Dias disponíveis: {{ current_user.dias_disp }} dias</p>
+
+{% endblock %}

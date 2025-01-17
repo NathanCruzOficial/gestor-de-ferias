@@ -18,22 +18,22 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Entrar')
 
 class RegisterForm(FlaskForm):
-    patents = [('1', 'Soldado'),
-               ('2', 'Cabo'),
-               ('3', '3º Sargento'),
-               ('4', '2º Sargento'),
-               ('5', '1º Sargento'),
-               ('6', 'Sub Tenente'),
-               ('7', '2º Tenente'),
-               ('8', '1º Tenente'),
-               ('9', 'Capitão'),
-               ('10', 'Major'),
-               ('11', 'Tenente Coronel'),
-               ('12', 'Coronel'),
-               ('13', 'General de Brigada'),
-               ('14', 'General de Divisão'),
-               ('15', 'General de Exército')]
-    nvls = [('1', '0'), ('2', '1'), ('3', '2')]
+    patents = [('Soldado', 'Soldado'),
+    ('Cabo', 'Cabo'),
+    ('3º Sargento', '3º Sargento'),
+    ('2º Sargento', '2º Sargento'),
+    ('1º Sargento', '1º Sargento'),
+    ('Sub Tenente', 'Sub Tenente'),
+    ('2º Tenente', '2º Tenente'),
+    ('1º Tenente', '1º Tenente'),
+    ('Capitão', 'Capitão'),
+    ('Major', 'Major'),
+    ('Tenente Coronel', 'Tenente Coronel'),
+    ('Coronel', 'Coronel'),
+    ('General de Brigada', 'General de Brigada'),
+    ('General de Divisão', 'General de Divisão'),
+    ('General de Exército', 'General de Exército')]
+    nvls = [('1', '1'), ('2', '2'), ('3', '3')]
 
     username = StringField("usuário", validators=[DataRequired()])
     password = PasswordField("senha", validators=[DataRequired()])

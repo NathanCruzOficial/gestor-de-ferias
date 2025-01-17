@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Document{% endblock %}</title>
     <link href="{{ url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet" >
-    <link href="{{ url_for('static', filename = 'sticky-footer.css')}}" rel="stylesheet" >
+    <link href="{{ url_for('static', filename = 'css/sticky-footer.css')}}" rel="stylesheet" >
     <link href="{{ url_for('static', filename = 'css/sign-in.css')}}" rel="stylesheet" >
 
     {% block head %}
@@ -15,7 +15,7 @@
 </head>
     <body>
 
-        {% include "header.html" %}
+        {% include "shared/header.html" %}
 
         <!-- menssagem de aviso -->
         {% with messages = get_flashed_messages() %}
@@ -30,10 +30,11 @@
             {% endif %}
         {% endwith %}
         
-        {% block content %}
-        {% endblock %}
-
-        {% include "footer.html" %}
+        <main>
+        {% block content %}{% endblock %}
+        </main>
+        
+        {% include "shared/footer.html" %}
 
         <script href="{{ url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
     </body>
