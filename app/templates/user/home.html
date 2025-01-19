@@ -1,52 +1,52 @@
 {% extends 'layouts/base.html' %}
 
+{% block title %}Perfil{% endblock %}
+
 {% block content %}    
-<div class="container-fluid">
-    <div class="m-4">
-        <div class="row">
-            <div class="col-4 text-bg-dark bg-dark p-3 rounded-1">
-                <h3>Bem-vindo, {{ current_user.nome_completo.split(' ')[0] }}!</h3>
-                <p>
-                    Posto: {{ current_user.posto_grad }} <br>
-                    Dias disponíveis: {{ current_user.dias_disp }} dias
-                </p>
-            </div>
-            <div class="col-8 p-3">
-                <h3 class=" p-3">Registrar Férias</h3>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur nemo pariatur quidem accusantium sed quibusdam veniam tempora obcaecati eius, amet fuga delectus commodi, qui quisquam sunt corrupti doloremque dolor aliquam?
-                </p>
-            </div>
-            <div class="col-12 p-3">
-                <h3 class=" p-3">Historico</h3>
-                <div class="container mt-4">
-                    <!-- Contêiner com barra de rolagem -->
-                    <div style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
-                        <table class="table">
-                            <thead>
-                                <th>Dias</th>
-                                <th>Data de Início</th>
-                                <th>Data de Fim</th>
-                                <th>Destino</th>
-                                <th>Status</th>
-                            </thead>
-                            <tbody>
-                                {% for i in range(10) %}
-                                <tr>
-                                    <td>15 dias</td>
-                                    <td>25/02/2021</td>
-                                    <td>25/03/2021</td>
-                                    <td>Cabo Frio</td>
-                                    <td class="text-bg-success">Retirada</td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
+<div class="row">
+    <div class="col-4 text-bg-dark bg-dark p-3 rounded-1 shadow-sm">
+        <h3>Bem-vindo, {{ current_user.nome_completo.split(' ')[0] }}!</h3>
+        <p>
+            Posto: {{ current_user.posto_grad }} <br>
+            Dias disponíveis: {{ current_user.dias_disp }} dias
+        </p>
+    </div>
+    <div class="col-8 p-3">
+        <h3 class=" p-3">Registrar Férias</h3>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur nemo pariatur quidem accusantium sed quibusdam veniam tempora obcaecati eius, amet fuga delectus commodi, qui quisquam sunt corrupti doloremque dolor aliquam?
+        </p>
+    </div>
+    <div class="col-12 p-3">
+        <h3 class=" p-3">Historico</h3>
+        <div class="container mt-4">
+            <!-- Contêiner com barra de rolagem -->
+            <div style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Dias</th>
+                            <th>Data de Início</th>
+                            <th>Data de Fim</th>
+                            <th>Destino</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in range(10) %}
+                        <tr>
+                            <td>15 dias</td>
+                            <td>25/02/2021</td>
+                            <td>25/03/2021</td>
+                            <td>Cabo Frio</td>
+                            <td class="text-bg-success">Retirada</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
+        
     </div>
 </div>
     

@@ -1,7 +1,9 @@
 {% extends 'layouts/base.html' %}
 
+{% block title %}Login - Sistema de Férias{% endblock %}
+
 {% block content %}      
-  <main class="form-signin w-100 m-auto">
+  <div class="col-3 m-auto p-2">
 
     <!-- formulário -->
     <form action="{{ url_for('auth.login') }}" method="post">
@@ -13,32 +15,13 @@
       <div class="form-floating">
         {{ form.username(class="form-control", _name="username", id="username", placeholder="Usuário") }}
         <label for="username">{{ form.username.label }}:</label>
-        {% if form.username.errors %}
-          <div class="alert alert-danger" role="alert">
-            <ul>
-              {% for error in form.username.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-      </div>
+
 
       <!-- password -->
       <div class="form-floating">
         {{ form.password(class="form-control", _name="password", id="floatingPassword", placeholder="Senha") }}
         <label for="password">{{ form.password.label }}:</label>
-        {% if form.password.errors %}
-          <div class="alert alert-danger" role="alert">
-            <ul>
-              {% for error in form.password.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-      </div>
-      
+
       <!-- remember-me -->
       <div class="form-check text-start my-3">
         <label class="form-check-label" for="flexCheckDefault">
@@ -46,14 +29,13 @@
         </label>
       </div>
 
+      <p class="p-2 text-bg-danger bg-opacity-25 rounded-2 text-danger">Sistema em Desenvolvimento.</p>
       <!-- submit -->
       </div class="form-floating">
-      {{ form.submit(class="btn btn-primary w-100 py-2") }}
+        <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
       </div>
         
     </form>
 
-  </main> 
-</body>
-
+  </div> 
 {% endblock %}
