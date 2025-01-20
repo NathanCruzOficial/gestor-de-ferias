@@ -1,14 +1,14 @@
 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 px-3 justify-content-center mb-md-0">
-  <li><a href="{{ url_for('user.user') }}" class="nav-link px-2 {% if request.endpoint == 'user.user' %}text-secondary{% else %}text-white{% endif %}">Perfil</a></li>
-  <li><a href="{{ url_for('user.historico') }}" class="nav-link px-2 {% if request.endpoint == 'user.historico' %}text-secondary{% else %}text-white{% endif %}">Histórico</a></li>
+  <li><a href="{{ url_for('user.user') }}" class="nav-link px-2 {% if request.endpoint == 'user.user' %}text-white{% else %}text-secondary{% endif %}">Perfil</a></li>
+  <li><a href="{{ url_for('user.historico') }}" class="nav-link px-2 {% if request.endpoint == 'user.historico' %}text-white{% else %}text-secondary{% endif %}">Histórico</a></li>
 
   {% if current_user.nivel >= 2 %}
-      <li><a href="{{ url_for('user.imprimir') }}" class="nav-link px-2 {% if request.endpoint == 'user.imprimir' %}text-secondary{% else %}text-white{% endif %}">Imprimir</a></li>
+      <li><a href="{{ url_for('user.imprimir') }}" class="nav-link px-2 {% if request.endpoint == 'user.imprimir' %}text-white{% else %}text-secondary{% endif %}">Imprimir</a></li>
   {% endif %}
 
   {% if current_user.nivel >= 3 %}
-      <li><a href="{{ url_for('user.register') }}" class="nav-link px-2 {% if request.endpoint == 'user.register' %}text-secondary{% else %}text-white{% endif %}">Registrador</a></li>
-      <li><a href="{{ url_for('user.painel') }}" class="nav-link px-2 {% if request.endpoint == 'user.painel' %}text-secondary{% else %}text-white{% endif %}">Painel</a></li>
-      <li><a href="{{ url_for('user.config') }}" class="nav-link px-2 {% if request.endpoint == 'user.config' %}text-secondary{% else %}text-white{% endif %}">Configurações</a></li>
+      <li><a href="{{ url_for('user.register') }}" class="nav-link px-2 {% if request.endpoint == 'user.register' %}text-white{% else %}text-secondary{% endif %}">Registrador</a></li>
+      <li><a href="{{ url_for('user.painel') }}" class="nav-link px-2 {% if request.endpoint == 'user.painel' %}text-white{% else %}text-secondary{% endif %}">Painel</a></li>
+      <li><a href="{{ url_for('user.config') }}" class="nav-link px-2 {% if request.endpoint == 'user.config' %}text-white{% else %}text-secondary{% endif %}">Configurações</a></li>
   {% endif %}
 </ul>

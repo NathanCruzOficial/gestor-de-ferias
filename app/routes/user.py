@@ -63,6 +63,7 @@ def register():
 
         crud.create(user)
         flash('Registro realizado com sucesso!', 'success')
+        return redirect(url_for('user.register'))
 
     else:
         # Coleta os erros do formulário
