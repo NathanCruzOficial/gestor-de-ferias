@@ -51,11 +51,11 @@ def home():
 
     return render_template("user/home.html", form=form, ferias=my_vacations)
 
-@user_bp.route('/historico')
+@user_bp.route('/ferias')
 @required_level(2)
-def historico():
+def ferias():
     vacations = Vacations.query.join(User).all()
-    return render_template("user/historico.html", registros = vacations)
+    return render_template("user/ferias.html", registros = vacations)
 
 @user_bp.route('/imprimir')
 @required_level(2)
@@ -77,6 +77,8 @@ def register():
 
         military_id = form.military_id.data
 
+        organization = form.organization.data
+
         nome_completo = str(form.nome_completo.data)
         nome_completo = nome_completo.upper()
 
@@ -90,7 +92,7 @@ def register():
         if confirm_password == password:
             if username in nome_completo:
                 if not User.query.filter_by(nome_completo=nome_completo).first():
-                    user = User(username=username, password=password, military_id=military_id, nome_completo=nome_completo,dias_disp=0, posto_grad=posto_grad, data_nascimento=data_nascimento, nivel=nivel, email=email, telefone=telefone)
+                    user = User(username=username, password=password, military_id=military_id, organization=organization,nome_completo=nome_completo,dias_disp=0, posto_grad=posto_grad, data_nascimento=data_nascimento, nivel=nivel, email=email, telefone=telefone)
 
                     crud.create(user)
                     flash('Registro realizado com sucesso!', 'success')

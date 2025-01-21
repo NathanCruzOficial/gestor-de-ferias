@@ -16,11 +16,14 @@
       {{ form.csrf_token }}
       <h1 class="h3 mb-3 fw-normal">Registrar Usuário</h1>
 
+      <!-- Campo OM -->
+      {{ form.organization(class="form-control", _name="organization", id="organization", placeholder="OM") }}
+
       <!-- Campo Username -->
       <div class="mb-1">
         <label for="username" class="form-label">Nome de Guerra:</label>
         <div class="input-group mb-1">
-          {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="senha") }}
+          {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="p/g") }}
           {{ form.username(class="form-control",_name="nome_completo", id="username", placeholder="Nome de Guerra") }}
         </div>
       </div>

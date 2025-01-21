@@ -1,6 +1,6 @@
 <ul class="nav nav-underline col-12 col-lg-auto me-lg-auto mb-2 px-3 justify-content-center mb-md-0">
   <li><a href="{{ url_for('user.home') }}" class="nav-link px-2 {% if request.endpoint == 'user.home' %}text-white{% else %}text-secondary{% endif %}">Perfil</a></li>
-  <li><a href="{{ url_for('user.historico') }}" class="nav-link px-2 {% if request.endpoint == 'user.historico' %}text-white{% else %}text-secondary{% endif %}">Histórico</a></li>
+  <li><a href="{{ url_for('user.ferias') }}" class="nav-link px-2 {% if request.endpoint == 'user.historico' %}text-white{% else %}text-secondary{% endif %}">Férias</a></li>
 
   {% if current_user.nivel >= 2 %}
       <li><a href="{{ url_for('user.imprimir') }}" class="nav-link px-2 {% if request.endpoint == 'user.imprimir' %}text-white{% else %}text-secondary{% endif %}">Imprimir</a></li>

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TextAreaField, TelField
 from wtforms.validators import DataRequired, Email, ValidationError
 from flask import flash
 from datetime import date, timedelta
@@ -45,13 +45,15 @@ class RegisterForm(FlaskForm):
     military_id = StringField("id militar", validators=[DataRequired()])
     posto_grad = SelectField("posto/graduação", choices=patents, validators=[DataRequired()])
     nome_completo = StringField("nome completo", validators=[DataRequired()])
+    organization = SelectField("posto/graduação", choices=[("Companhia","Cia C GUEs - 9ª Bda Inf Mtz"),("Comando","GUEs - 9ª Bda Inf Mtz"),("Polícia do Exército","9º Pel PE")], validators=[DataRequired()])
+
     data_nascimento = DateField("data de nascimento", format='%Y-%m-%d', validators=[DataRequired()], render_kw={
             'max': (date.today() - relativedelta(years=19)).strftime('%Y-%m-%d'),  # Máximo: data atual
             'min': (date.today() - relativedelta(years=130)).strftime('%Y-%m-%d')  # Mínimo: 100 anos atrás
         })
     nivel = SelectField("nivel", choices=nvls, validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired(), Email()])
-    telefone = StringField("telefone", validators=([phone_validator]))
+    telefone = TelField("telefone")
     submit = SubmitField('Registrar')
 
 class VacationForm(FlaskForm):
@@ -76,7 +78,7 @@ class VacationForm(FlaskForm):
 )
     
     destino = StringField("destino", validators=[DataRequired()])
-    motivo = StringField("Motivo")
+    motivo = TextAreaField("Motivo")
     detalhes = StringField("detalhes")
 
     def validate_data_fim(self, field):

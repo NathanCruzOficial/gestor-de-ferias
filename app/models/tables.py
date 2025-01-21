@@ -16,18 +16,20 @@ class User(db.Model, UserMixin):
     military_id = db.Column(db.String(30), unique=True, nullable=False)
     posto_grad = db.Column(db.String(30), nullable=False)
     nome_completo = db.Column(db.String(30), unique=True, nullable=False)
+    organization = db.Column(db.String(40), nullable=False)
     data_nascimento = db.Column(db.Date, nullable=False)
     nivel = db.Column(db.Integer, nullable=False, default=0)
     dias_disp = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(30), nullable=False)
     telefone = db.Column(db.String(30), nullable=False)
                                 
-    def __init__(self, username, password, military_id, posto_grad, nome_completo, data_nascimento, nivel, dias_disp, email, telefone):
+    def __init__(self, username, password, military_id, posto_grad, nome_completo, organization, data_nascimento, nivel, dias_disp, email, telefone):
         self.username = username
         self.password = generate_password_hash(password)  # Armazenando a senha de forma segura
         self.military_id = military_id
         self.posto_grad = posto_grad
         self.nome_completo = nome_completo
+        self.organization = organization
         self.data_nascimento = data_nascimento
         self.nivel = nivel
         self.dias_disp = dias_disp
