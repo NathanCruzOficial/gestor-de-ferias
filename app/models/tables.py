@@ -46,7 +46,7 @@ class Vacations(db.Model):
     data_fim = db.Column(db.Date, nullable=False)
     destino = db.Column(db.String(30), nullable=False)
     status = db.Column(db.Integer, nullable=False, default=0)
-    user = db.relationship("Users", foreign_keys=[user_id])
+    user = db.relationship("Usuarios", foreign_keys=[user_id], backref="vacations")
 
     def __init__(self, user_id, data_inicio, data_fim, destino, status=0):
         self.user_id = user_id
