@@ -1,8 +1,8 @@
-"""empty message
+"""Recriar banco de dados
 
-Revision ID: c487593f9f45
+Revision ID: 8850b3eaad06
 Revises: 
-Create Date: 2025-01-15 19:57:44.266749
+Create Date: 2025-01-20 15:01:45.702841
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c487593f9f45'
+revision = '8850b3eaad06'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +21,8 @@ def upgrade():
     op.create_table('Usuarios',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=30), nullable=False),
-    sa.Column('password', sa.String(length=30), nullable=False),
+    sa.Column('password', sa.String(length=255), nullable=False),
+    sa.Column('military_id', sa.String(length=30), nullable=False),
     sa.Column('posto_grad', sa.String(length=30), nullable=False),
     sa.Column('nome_completo', sa.String(length=30), nullable=False),
     sa.Column('data_nascimento', sa.Date(), nullable=False),
@@ -30,6 +31,7 @@ def upgrade():
     sa.Column('email', sa.String(length=30), nullable=False),
     sa.Column('telefone', sa.String(length=30), nullable=False),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('military_id'),
     sa.UniqueConstraint('nome_completo')
     )
     op.create_table('Ferias',

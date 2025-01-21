@@ -1,9 +1,9 @@
-from app.models.tables import Users
+from app.models.tables import User , Vacations
 from app.controllers import crud
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import logout_user, login_required, current_user
-from app.models.forms import RegisterForm
+from app.models.forms import RegisterForm, VacationForm
 from functools import wraps
 
 # Isntânciando o Blueprint
@@ -32,12 +32,30 @@ def require_login():
 
 # Página principal
 @user_bp.route('/', methods=['GET', 'POST'])
-def user():
-    return render_template("user/home.html")
+def home():
+    my_vacations = Vacations.query.filter_by(user_id=current_user.id).order_by(Vacations.id.desc()).all()
+    form = VacationForm()
+    if form.validate_on_submit():
+        if current_user.dias_disp > 0:
+            data_inicio = form.data_inicio.data
+            data_fim = form.data_fim.data
+            user_id = current_user.id
+            destino = form.destino.data
+            motivo = form.motivo.data
+
+            registro_ferias = Vacations(user_id, data_inicio, data_fim, destino, motivo, status=0)
+            crud.create(registro_ferias)
+            return redirect(url_for("user.home"))
+        else:
+            flash(f'Seus dias de dispensa acabaram! você tem: {current_user.dias_disp} dias disponíveis', 'danger')
+
+    return render_template("user/home.html", form=form, ferias=my_vacations)
 
 @user_bp.route('/historico')
+@required_level(2)
 def historico():
-    return render_template("user/historico.html")
+    vacations = Vacations.query.join(User).all()
+    return render_template("user/historico.html", registros = vacations)
 
 @user_bp.route('/imprimir')
 @required_level(2)
@@ -48,22 +66,41 @@ def imprimir():
 @required_level(3)
 def register():
     form = RegisterForm()
+    users = User.query.all()
     if form.validate_on_submit():
       # Aqui o registro seria processado.
-        username = form.username.data
+        username = str(form.username.data)
+        username = username.upper()
+
         password = form.password.data
-        nome_completo = form.nome_completo.data
+        confirm_password = form.confirm_password.data
+
+        military_id = form.military_id.data
+
+        nome_completo = str(form.nome_completo.data)
+        nome_completo = nome_completo.upper()
+
         posto_grad = form.posto_grad.data
         data_nascimento = form.data_nascimento.data
         nivel = form.nivel.data
-        email = form.email.data
+        email = str(form.email.data)
+        email = email.lower()
         telefone = form.telefone.data
 
-        user = Users(username=username, password=password, nome_completo=nome_completo,dias_disp=0, posto_grad=posto_grad, data_nascimento=data_nascimento, nivel=nivel, email=email, telefone=telefone)
+        if confirm_password == password:
+            if username in nome_completo:
+                if not User.query.filter_by(nome_completo=nome_completo).first():
+                    user = User(username=username, password=password, military_id=military_id, nome_completo=nome_completo,dias_disp=0, posto_grad=posto_grad, data_nascimento=data_nascimento, nivel=nivel, email=email, telefone=telefone)
 
-        crud.create(user)
-        flash('Registro realizado com sucesso!', 'success')
-        return redirect(url_for('user.register'))
+                    crud.create(user)
+                    flash('Registro realizado com sucesso!', 'success')
+                    return redirect(url_for('user.register'))
+                else:
+                    flash('Usuário Já Existe!', 'danger')
+            else:
+                flash('O nome de guerra deve pertencer ao nome completo!', 'warning')
+        else:
+            flash('As senhas não coicidem!', 'warning')
 
     else:
         # Coleta os erros do formulário
@@ -71,25 +108,25 @@ def register():
             for error in errors:
                 flash(error)
 
-    return render_template('user/registrador.html', form=form)
+    return render_template('user/registrador.html', form=form,  users=users)
 
-@user_bp.route('/painel')
-@required_level(3)
-def painel():
-    users = Users.query.all()  # Pegue todos os usuários
-    return render_template("user/painel.html", users=users)
+@user_bp.route('/edit/<int:user_id>', methods=['GET','POST'])
+def edit(user_id):
+    users = User.query.all()  # Pegue todos os usuários
+    return render_template('user/registrador.html', users=users)
 
-@user_bp.route('/painel/delete_user/<int:user_id>', methods=['GET','POST'])
-@login_required
+@user_bp.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @required_level(3)
 def delete_user(user_id):
     # Impede que o usuário logado se exclua
     if current_user.id == user_id:
-        return redirect(url_for('user.painel'))  # Redireciona para a lista de usuários
+        return redirect(url_for('user.register'))  # Redireciona para a lista de usuários
 
     # Encontre o usuário pelo ID e exclua
-    crud.delete(user_id)
-    return redirect(url_for('user.painel'))  # Redireciona de volta para a lista de usuários
+    crud.delete_user(user_id)
+    return redirect(url_for('user.register'))  # Redireciona de volta para a lista de usuários
+
+
 
 @user_bp.route('/config')
 @required_level(3)

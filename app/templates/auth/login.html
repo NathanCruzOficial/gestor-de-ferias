@@ -11,16 +11,19 @@
       <img class="mb-4" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="72" height="auto">
       <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
 
+      <!-- posto/grad -->
+      {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="P/G") }}
+
       <!-- username -->
       <div class="form-floating">
         {{ form.username(class="form-control", _name="username", id="username", placeholder="Usuário") }}
-        <label for="username">{{ form.username.label }}:</label>
+        <label for="username">Usuário</label>
 
 
       <!-- password -->
       <div class="form-floating">
         {{ form.password(class="form-control", _name="password", id="floatingPassword", placeholder="Senha") }}
-        <label for="password">{{ form.password.label }}:</label>
+        <label for="password">Senha</label>
 
       <!-- remember-me -->
       <div class="form-check text-start my-3">
@@ -29,7 +32,9 @@
         </label>
       </div>
 
-      <p class="p-2 text-bg-danger bg-opacity-25 rounded-2 text-danger">Sistema em Desenvolvimento.</p>
+      <div>
+      <label class="form-label text-danger">Sistema em Desenvolvimento.</label>
+      </div>
       <!-- submit -->
       </div class="form-floating">
         <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>

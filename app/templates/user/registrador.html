@@ -7,68 +7,231 @@
 {% endblock %}
 
 {% block content %}
-  <main class="form-signin m-auto" >
+<div class="row" >
 
+<!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
+  <div class="col-4 p-3 bg-white rounded-3 shadow">
     <!-- formulário -->
     <form action="{{ url_for('user.register') }}" method="post">
       {{ form.csrf_token }}
       <h1 class="h3 mb-3 fw-normal">Registrar Usuário</h1>
 
-      <!-- username -->
-      <div class="form-floating">
-        {{ form.username(class="form-control", _name="username", id="username", placeholder="Usuário") }}
-        <label for="username">{{ form.username.label }}:</label>
+      <!-- Campo Username -->
+      <div class="mb-1">
+        <label for="username" class="form-label">Nome de Guerra:</label>
+        <div class="input-group mb-1">
+          {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="senha") }}
+          {{ form.username(class="form-control",_name="nome_completo", id="username", placeholder="Nome de Guerra") }}
+        </div>
       </div>
 
-      <!-- password -->
-      <div class="form-floating">
-        {{ form.password(class="form-control", _name="password", id="password", placeholder="senha") }}
-        <label for="password">{{ form.password.label }}:</label>
+      <!-- Campo de Senha -->
+        <label for="password" class="form-label">Senha:</label>
+
+      <!-- Botão para alternar a visualização das senhas -->
+        <button type="button" class="btn btn-outline justify-content-end" id="togglePassword">
+            <i class="bi bi-eye" id="toggleIcon"></i>
+            <span> Mostrar Senhas</span>
+        </button>
+
+
+      {{ form.password(class="form-control mb-1", _name="password", id="password", placeholder="Digite sua Senha") }}
+      <!-- Campo de Confirmar Senha -->
+      {{ form.confirm_password(class="form-control", _name="confirm_password", id="confirm_password", placeholder="Confirme sua Senha") }}
+
+      
+
+      <!-- nivel -->
+      <div class="input-group mt-3 mb-1">
+        <label class="input-group-text"  for="nivel">Autoridade:</label>
+        {{ form.nivel(class="form-control", _name="nivel", id="nivel", placeholder="senha") }}
       </div>
 
-      <!-- posto_grad -->
-      <div class="form-floating">
-        {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="senha") }}
-        <label for="posto_grad">{{ form.posto_grad.label }}:</label>
-      </div>
+      <hr>
 
-       <!-- nome_completo -->
-       <div class="form-floating">
-        {{ form.nome_completo(class="form-control", _name="nome_completo", id="nome_completo", placeholder="senha") }}
-        <label for="Nome Completo">{{ form.nome_completo.label }}:</label>
-      </div>
+      <h1 class="h3 mb-3 fw-normal">Dados Pessoais</h1>
+
+      <!-- id militar -->
+      {{ form.military_id(class="mb-1 form-control", _name="military_id", id="military_id", placeholder="Identidade Militar") }}
+
+      <!-- nome_completo -->
+      {{ form.nome_completo(class="mb-1 form-control", _name="nome_completo", id="nome_completo", placeholder="Nome Completo") }}
 
       <!-- data_nascimento -->
-      <div class="form-floating">
-        {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
-        <label for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
-      </div>
-      
-      <!-- nivel -->
-      <div class="form-floating">
-        {{ form.nivel(class="form-control", _name="nivel", id="nivel", placeholder="senha") }}
-        <label for="nivel">{{ form.nivel.label }}:</label>
+      <div class="input-group mb-1">
+        <label class="input-group-text" for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
+      {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
       </div>
 
       <!-- email -->
-      <div class="form-floating">
-        {{ form.email(class="form-control", _name="email", id="email", placeholder="senha") }}
-        <label for="email">{{ form.email.label }}:</label>
+      <div class="input-group mb-1">
+        <label class="input-group-text" for="email">Email:</label>
+        {{ form.email(class="form-control", _name="email", id="email", placeholder="@email.com") }}
       </div>
 
       <!-- telefone -->
-      <div class="form-floating">
-        {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="senha") }}
-        <label for="telefone">{{ form.telefone.label }}:</label>
+      <div class="input-group mb-1">
+        <label class="input-group-text" for="telefone">Contato:</label>
+        {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="(21) 91234-5678") }}
       </div>
+
+      <label class="form-text"> Preencha os dados com cuidado.</label>
 
       <!-- submit -->
-      </div class="form-floating">
-      {{ form.submit(class="btn btn-primary w-100 py-2") }}
+      <div class="">
+      {{ form.submit(class="btn btn-primary my-3") }}
       </div>
-
     </form>
-  </main> 
-</body>
+  </div>
+<!-- ==================================== LISTA DE USUÁRIOS ============================================= -->
+
+<div class="col-8 p-3">
+  <h2 class="h3">Lista de Usuários</h2>
+
+  <!-- Barra de Pesquisa -->
+  <div class="mb-3 input-group">
+    <label class="input-group-text" for="searchInput"><i class="bi bi-search"></i></label>
+    <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por nome, email, posto ou nível...">
+  </div>
+
+  <div class="bg-white rounded-3 p-3">
+    <div style="max-height: 570px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+      <table class="table table-striped table-hover table-bordered align-middle">
+        <thead class="table-dark text-center sticky-top">
+          <tr>
+            <th scope="col">Id Militar</th>
+            <th scope="col">Posto/Grad</th>
+            <th scope="col">Usuário</th>
+            <th scope="col">Email</th>
+            <th scope="col">Contato</th>
+            <th scope="col">Nível</th>
+            <th scope="col">Ação</th>
+          </tr>
+        </thead>
+        <tbody id="userTable">
+          {% for user in users %}
+              <tr class="text-center">
+              <td>{{ user.military_id }}</td>
+              <td>{{ user.posto_grad }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.telefone }}</td>
+              <td>{{ user.nivel }}</td>
+              <td>
+                <div class="hstak">
+                {% if current_user.id != user.id %}
+                  <a href="{{ url_for('user.home') }}" class="btn btn-secondary" ><i class="bi bi-pencil-square"></i></a>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-user-id="{{ user.id }}">
+                    <i class="bi bi-trash3-fill"></i>
+                </button>
+                
+                {% else %}
+                  <button class="btn btn-secondary" disabled><i class="bi bi-pencil-square"></i></button>
+                  <button class="btn btn-secondary" disabled><i class="bi bi-trash3-fill"></i></button>
+                {% endif %}
+                </div>
+              </td>
+            </tr>  
+      {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================================= -->
+
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirmação</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        Você tem certeza de que deseja deletar esse usuário?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" type="button" class="btn btn-danger">Deletar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div> 
+
+<script>
+// JavaScript para alternar a visibilidade das senhas
+const toggleButton = document.getElementById("togglePassword");
+const toggleIcon = document.getElementById("toggleIcon");
+const passwordFields = [document.getElementById("password"), document.getElementById("confirm_password")];
+
+toggleButton.addEventListener("click", () => {
+  passwordFields.forEach(field => {
+    if (field.type === "password") {
+      field.type = "text";
+      toggleIcon.classList.remove("bi-eye");
+      toggleIcon.classList.add("bi-eye-slash");
+      toggleButton.querySelector("span").textContent = " Ocultar Senhas";
+    } else {
+      field.type = "password";
+      toggleIcon.classList.remove("bi-eye-slash");
+      toggleIcon.classList.add("bi-eye");
+      toggleButton.querySelector("span").textContent = " Mostrar Senhas";
+    }
+  });
+});
+
+</script>
+
+<script>
+  document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchQuery = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#userTable tr');
+
+    rows.forEach(function(row) {
+      const cells = row.getElementsByTagName('td');
+      let match = false;
+
+      for (let i = 0; i < cells.length; i++) {
+        if (cells[i].textContent.toLowerCase().includes(searchQuery)) {
+          match = true;
+        }
+      }
+
+      if (match) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const confirmationModal = document.getElementById('confirmationModal');
+
+    confirmationModal.addEventListener('show.bs.modal', function (event) {
+        // Botão que acionou o modal
+        const button = event.relatedTarget;
+
+        // Obtenha o ID do usuário do atributo data-user-id
+        const userId = button.getAttribute('data-user-id');
+
+        // Encontre o botão "Deletar" no modal
+        const deleteButton = confirmationModal.querySelector('.btn-danger[href]');
+
+        // Atualize o link de exclusão com o ID do usuário
+        deleteButton.setAttribute('href', `/user/delete_user/${userId}`);
+    });
+});
+
+</script>
+
 
 {% endblock %}

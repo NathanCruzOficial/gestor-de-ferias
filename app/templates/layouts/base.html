@@ -25,22 +25,20 @@
         <!-- menssagem de aviso -->
         {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
-            <div>
-                <ul class="flashes">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
-                            <li>{{ message }}</li>
-                        </div>
-                    {% endfor %}
-                </ul>
-            </div>
+            <ul class="flashes p-3 m-0">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        <li>{{ message }}</li>
+                    </div>
+                {% endfor %}
+            </ul>
         {% endif %}
         {% endwith %}
 
         
-            <div class="p-5">
+        <div class="bg-body-secondary p-5">
         {% block content %}{% endblock %}
-            </div>
+        </div>
         
         {% include "shared/footer.html" %}
 

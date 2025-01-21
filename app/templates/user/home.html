@@ -4,19 +4,47 @@
 
 {% block content %}    
 <div class="row">
-    <div class="col-4 text-bg-dark bg-dark p-3 rounded-1 shadow-sm">
+    <div class="col-4 text-bg-dark bg-dark p-3 rounded-1 shadow">
         <h3>Bem-vindo, {{ current_user.nome_completo.split(' ')[0] }}!</h3>
         <p>
             Posto: {{ current_user.posto_grad }} <br>
             Dias disponíveis: {{ current_user.dias_disp }} dias
         </p>
+        <button class="btn btn-outline-light">Editar Perfil</button>
     </div>
+<!-- =======================================Registrar Férias=========================================== -->
     <div class="col-8 p-3">
-        <h3 class=" p-3">Registrar Férias</h3>
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur nemo pariatur quidem accusantium sed quibusdam veniam tempora obcaecati eius, amet fuga delectus commodi, qui quisquam sunt corrupti doloremque dolor aliquam?
-        </p>
+        {% if current_user.dias_disp == 0 %}
+        <form action="{{ url_for('user.home') }}" method="post">
+            {{ form.csrf_token }}
+
+            <div class="mb-3">
+                {{ form.data_inicio.label }}
+                {{ form.data_inicio(class="form-control", id="data-inicio") }}
+            </div>
+            <div class="mb-3">
+                {{ form.data_fim.label }}
+                {{ form.data_fim(class="form-control", id="data-fim") }}
+            </div>
+            <div class="mb-3">
+                {{ form.destino.label }}
+                {{ form.destino(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                {{ form.motivo.label }}
+                {{ form.motivo(class="form-control") }}
+            </div>
+            <div class="mb-3">
+                <span id="dias"></span> <!-- Aqui vai aparecer o número de dias -->
+            </div>
+            <button type="submit" class="btn btn-primary">Reservar</button>
+            {% else %}
+                <p> Seu período de férias acabou!</p>
+            {% endif %}
+        </form>
     </div>
+
+<!-- =======================================Histórico=========================================== -->
     <div class="col-12 p-3">
         <h3 class=" p-3">Historico</h3>
         <div class="container mt-4">
@@ -29,17 +57,29 @@
                             <th>Data de Início</th>
                             <th>Data de Fim</th>
                             <th>Destino</th>
+                            <th>Motivo</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for i in range(10) %}
+                        {% for f in ferias %}
                         <tr>
-                            <td>15 dias</td>
-                            <td>25/02/2021</td>
-                            <td>25/03/2021</td>
-                            <td>Cabo Frio</td>
-                            <td class="text-bg-success">Retirada</td>
+                            <td>{{ f.dias }}</td>
+                            <td>{{ f.data_inicio }}</td>
+                            <td>{{ f.data_fim }}</td>
+                            <td>{{ f.destino }}</td>
+                            <td>{{ f.motivo }}</td>
+                            {% if f.status == 0 %}
+                                <td class="bg-secondary">Em Análise</td>
+                                {% elif f.status == 1 %}
+                                <td class="bg-primary">Aprovada</td>
+                                {% elif f.status == 2 %}
+                                <td class="bg-danger">Negada</td>
+                                {% elif f.status == 3 %}
+                                <td class="bg-success">Retirada</td>
+                                {% elif f.status == 4 %}
+                                <td class="bg-warning">Em Andamento</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -50,6 +90,57 @@
     </div>
 </div>
     
+<script>
+    const dataInicio = document.getElementById('data-inicio');
+    const dataFim = document.getElementById('data-fim');
+
+    dataInicio.addEventListener('change', function () {
+        // Obtém o valor de data_inicio
+        const inicioValue = new Date(dataInicio.value);
+
+        // Calcula o dia seguinte
+        const diaSeguinte = new Date(inicioValue);
+        diaSeguinte.setDate(inicioValue.getDate() + 1);
+
+        // Converte para formato YYYY-MM-DD
+        const minValue = diaSeguinte.toISOString().split('T')[0];
+
+        // Atualiza o atributo min do campo data_fim
+        dataFim.min = minValue;
+
+        // Opcional: redefinir o valor atual de data_fim se for inválido
+        if (dataFim.value && dataFim.value < minValue) {
+            dataFim.value = minValue;
+        }
+    });
+</script>
+<script>
+    // Função para calcular a diferença em dias
+    function calcularDias() {
+        // Pega os valores das datas de início e fim
+        var dataInicio = document.getElementById('data-inicio').value;
+        var dataFim = document.getElementById('data-fim').value;
+
+        // Se ambas as datas forem preenchidas, calcular a diferença
+        if (dataInicio && dataFim) {
+            var inicio = new Date(dataInicio);
+            var fim = new Date(dataFim);
+
+            // Verifica se a data de início é menor que a data de fim
+            if (inicio <= fim) {
+                var diffTime = fim - inicio;
+                var diffDays = diffTime / (1000 * 3600 * 24); // Converte de milissegundos para dias
+                document.getElementById('dias').textContent = 'Quantidade de dias: ' + diffDays;
+            } else {
+                document.getElementById('dias').textContent = 'A data de fim deve ser maior que a data de início.';
+            }
+        }
+    }
+
+    // Adiciona listeners para recalcular os dias sempre que o usuário mudar as datas
+    document.getElementById('data-inicio').addEventListener('input', calcularDias);
+    document.getElementById('data-fim').addEventListener('input', calcularDias);
+</script>
 
 {% endblock %}
 
