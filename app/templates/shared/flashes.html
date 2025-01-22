@@ -1,0 +1,12 @@
+<!-- menssagem de aviso -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+<div class=" bg-body-secondary p-1 m-0">
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} m-0 p-2 " role="alert">
+                <label class=" text-{{ category }}">{{ message }}</label>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endwith %}

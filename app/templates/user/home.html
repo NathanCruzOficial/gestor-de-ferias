@@ -4,8 +4,8 @@
 
 {% block content %}    
 <div class="row">
-    <div class="col-4">
-        <div class="text-bg-dark bg-dark p-3 rounded-1 shadow">
+    <div class="col-lg-4">
+        <div class="text-bg-dark bg-dark p-3 rounded-1 shadow justify-content-lg-center">
             <h3>Bem-vindo, {{ current_user.nome_completo.split(' ')[0] }}!</h3>
             <p>
                 Posto: {{ current_user.posto_grad }} <br>
@@ -15,9 +15,9 @@
         </div>
     </div>
 <!-- =======================================Registrar Férias=========================================== -->
-    <div class="col-8">
+    <div class="col-lg-8 mt-lg-0 mt-2">
         <div class="bg-white p-3 rounded-1 h-100 ">
-        {% if current_user.dias_disp == 0 %}
+        {% if current_user.dias_disp > 0 %}
             <form action="{{ url_for('user.home') }}" method="post">
                 {{ form.csrf_token }}
 
@@ -31,17 +31,17 @@
                     {{ form.data_fim(class="form-control", id="data-fim") }}
                 </div>
                 <div class="input-group my-1 ">
-                    {{ form.destino.label(class="input-group-text") }}
-                    {{ form.destino(class="form-control") }}
+                    <label for="destino" class="input-group-text">Destino</label>
+                    {{ form.destino(class="form-control", id="destino") }}
                 </div>
                 <div class="input-group my-1 ">
                     {{ form.motivo.label(class="input-group-text") }}
-                    {{ form.motivo(class="form-control") }}
+                    {{ form.motivo(class="form-control", maxlength="250", style="resize: none;") }}
                 </div>
                 <div class="mb-3">
-                    <span id="dias"></span> <!-- Aqui vai aparecer o número de dias -->
+                    <span class="form-label text-danger" id="dias"></span> <!-- Aqui vai aparecer o número de dias -->
                 </div>
-                <button type="submit" class="btn btn-secondary px-5">Registrar</button>
+                <button type="submit" class="btn btn-outline-success px-5">Registrar</button>
                 {% else %}
                 <div class="text-center">
                     <h1 class="h3 p-2 text-bg-warning">Aviso:</h1>
@@ -55,10 +55,9 @@
 <!-- =======================================Histórico=========================================== -->
     <div class="col-12 p-3">
         <h3 class=" p-3">Historico</h3>
-        <div class="container mt-4">
             <!-- Contêiner com barra de rolagem -->
             <div style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
-                <table class="table table-striped">
+                <table class="table table-sm table-striped">
                     <thead class="table-dark">
                         <tr>
                             <th>Dias</th>
@@ -93,8 +92,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        
     </div>
 </div>
     

@@ -3,7 +3,7 @@
 {% block title %}Login - Sistema de Férias{% endblock %}
 
 {% block content %}      
-  <div class="col-3 m-auto p-2">
+  <div class="col-lg-4 col-md-5 col-6 m-auto p-2">
 
     <!-- formulário -->
     <form action="{{ url_for('auth.login') }}" method="post">
@@ -16,7 +16,7 @@
 
       <!-- username -->
       <div class="form-floating">
-        {{ form.username(class="form-control", _name="username", id="username", placeholder="Usuário") }}
+        {{ form.username(class="form-control text-uppercase", _name="username", id="username", placeholder="Usuário") }}
         <label for="username">Usuário</label>
 
 

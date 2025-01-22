@@ -24,25 +24,27 @@
   </symbol>
 </svg>
 
-<main>
-    <header class="p-2 text-bg-dark shadow">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-              <img class="bi me-2" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="45" height="auto">          
-            </a>
+<header class="text-bg-dark shadow">
+  <div class="container-fluid">
+    <div class="row mx-3 align-items-center">
+      <div class="col-1 p-2 order-1">
+        <a href="/" class="bg-danger">
+          <img class="bi" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="auto" height="65">          
+        </a>
+      </div>
 
-            {% if current_user.is_authenticated %}
-              
-              {% include 'layouts/navbar.html' %}
+      {% if current_user.is_authenticated %}
+      <div class="col-12 col-md-8 order-md-3 order-4 ">
+        {% include 'layouts/navbar.html' %}
+      </div>
 
-              <h6 class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">{{ current_user.posto_grad + " " + current_user.username }}</h6>
+      <div class="col-md-3 col-11 hstack order-3 accordion justify-content-end">
+        <h6 class="me-3" role="search">{{ current_user.posto_grad + " " + current_user.username }}</h6>
       
-              <div class="text-end">
-                  <a href="{{ url_for('user.logout') }}" class="btn btn-outline-light me-2">Sair</a>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      </header>
-</main>
+        <a href="{{ url_for('user.logout') }}" class="btn btn-outline-light me-2">Sair</a>
+
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</header>

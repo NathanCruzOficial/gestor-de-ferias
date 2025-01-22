@@ -1,15 +1,16 @@
-from app.controllers.crud import create_admin
 from app.models.tables import User
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user
 from app.models.forms import LoginForm
 
 
+
+
+
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/', methods=['GET', 'POST'])
 def login():
-    create_admin()
     form = LoginForm()
     if form.validate_on_submit():        
         username = str(form.username.data)

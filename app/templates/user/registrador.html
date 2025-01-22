@@ -10,85 +10,92 @@
 <div class="row" >
 
 <!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
-  <div class="col-4 p-3 bg-white rounded-3 shadow">
+  <div class="col-lg-4 p-3 bg-white rounded-3 shadow">
     <!-- formulário -->
     <form action="{{ url_for('user.register') }}" method="post">
       {{ form.csrf_token }}
-      <h1 class="h3 mb-3 fw-normal">Registrar Usuário</h1>
 
-      <!-- Campo OM -->
-      {{ form.organization(class="form-control", _name="organization", id="organization", placeholder="OM") }}
+    <div class="row-cols-lg-1 row justify-content-center"> 
+      <div class="col-5">
+        <h1 class="h3 mb-3 fw-normal">Registrar Usuário</h1>
 
-      <!-- Campo Username -->
-      <div class="mb-1">
-        <label for="username" class="form-label">Nome de Guerra:</label>
-        <div class="input-group mb-1">
-          {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="p/g") }}
-          {{ form.username(class="form-control",_name="nome_completo", id="username", placeholder="Nome de Guerra") }}
+        <!-- Campo OM -->
+        {{ form.organization(class="form-control", _name="organization", id="organization", placeholder="OM") }}
+
+        <!-- Campo Username -->
+        <div class="mb-1">
+          <label for="username" class="form-label">Nome de Guerra:</label>
+          <div class="input-group mb-1">
+            {{ form.posto_grad(class="form-control", _name="posto_grad", id="posto_grad", placeholder="p/g") }}
+            {{ form.username(class="form-control",_name="nome_completo", id="username", placeholder="Nome de Guerra") }}
+          </div>
         </div>
-      </div>
 
-      <!-- Campo de Senha -->
-        <label for="password" class="form-label">Senha:</label>
+        <!-- Campo de Senha -->
+          <label for="password" class="form-label">Senha:</label>
 
-      <!-- Botão para alternar a visualização das senhas -->
-        <button type="button" class="btn btn-outline justify-content-end" id="togglePassword">
-            <i class="bi bi-eye" id="toggleIcon"></i>
-            <span> Mostrar Senhas</span>
-        </button>
+        <!-- Botão para alternar a visualização das senhas -->
+          <button type="button" class="btn btn-outline justify-content-end" id="togglePassword">
+              <i class="bi bi-eye" id="toggleIcon"></i>
+              <span> Mostrar Senhas</span>
+          </button>
 
 
-      {{ form.password(class="form-control mb-1", _name="password", id="password", placeholder="Digite sua Senha") }}
-      <!-- Campo de Confirmar Senha -->
-      {{ form.confirm_password(class="form-control", _name="confirm_password", id="confirm_password", placeholder="Confirme sua Senha") }}
+        {{ form.password(class="form-control mb-1", _name="password", id="password", placeholder="Digite sua Senha") }}
+        <!-- Campo de Confirmar Senha -->
+        {{ form.confirm_password(class="form-control", _name="confirm_password", id="confirm_password", placeholder="Confirme sua Senha") }}
 
-      
+        
 
-      <!-- nivel -->
-      <div class="input-group mt-3 mb-1">
-        <label class="input-group-text"  for="nivel">Autoridade:</label>
-        {{ form.nivel(class="form-control", _name="nivel", id="nivel", placeholder="senha") }}
+        <!-- nivel -->
+        <div class="input-group mt-3 mb-1">
+          <label class="input-group-text"  for="nivel">Autoridade:</label>
+          {{ form.nivel(class="form-control", _name="nivel", id="nivel", placeholder="senha") }}
       </div>
 
       <hr>
 
-      <h1 class="h3 mb-3 fw-normal">Dados Pessoais</h1>
-
-      <!-- id militar -->
-      {{ form.military_id(class="mb-1 form-control", _name="military_id", id="military_id", placeholder="Identidade Militar") }}
-
-      <!-- nome_completo -->
-      {{ form.nome_completo(class="mb-1 form-control", _name="nome_completo", id="nome_completo", placeholder="Nome Completo") }}
-
-      <!-- data_nascimento -->
-      <div class="input-group mb-1">
-        <label class="input-group-text" for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
-      {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
       </div>
+        <div class="col-5">
+        <h1 class="h3 mb-3 fw-normal">Dados Pessoais</h1>
 
-      <!-- email -->
-      <div class="input-group mb-1">
-        <label class="input-group-text" for="email">Email:</label>
-        {{ form.email(class="form-control", _name="email", id="email", placeholder="@email.com") }}
+        <!-- id militar -->
+        {{ form.military_id(class="mb-1 form-control", _name="military_id", id="military_id", placeholder="Identidade Militar") }}
+
+        <!-- nome_completo -->
+        {{ form.nome_completo(class="mb-1 form-control", _name="nome_completo", id="nome_completo", placeholder="Nome Completo") }}
+
+        <!-- data_nascimento -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
+        {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
+        </div>
+
+        <!-- email -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="email">Email:</label>
+          {{ form.email(class="form-control", _name="email", id="email", placeholder="@email.com") }}
+        </div>
+
+        <!-- telefone -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="telefone">Contato:</label>
+          {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="(21) 91234-5678") }}
+        </div>
+
+        <label class="form-text"> Preencha os dados com cuidado.</label>
+
+        <!-- submit -->
+        <div class="">
+          {{ form.submit(class="btn btn-primary my-3") }}
+        </div>
+        </form>
       </div>
-
-      <!-- telefone -->
-      <div class="input-group mb-1">
-        <label class="input-group-text" for="telefone">Contato:</label>
-        {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="(21) 91234-5678") }}
-      </div>
-
-      <label class="form-text"> Preencha os dados com cuidado.</label>
-
-      <!-- submit -->
-      <div class="">
-      {{ form.submit(class="btn btn-primary my-3") }}
-      </div>
-    </form>
+  </div>
   </div>
 <!-- ==================================== LISTA DE USUÁRIOS ============================================= -->
 
-<div class="col-8 p-3">
+<div class="col-lg-8 p-3">
   <h2 class="h3">Lista de Usuários</h2>
 
   <!-- Barra de Pesquisa -->
@@ -98,8 +105,8 @@
   </div>
 
   <div class="bg-white rounded-3 p-3">
-    <div style="max-height: 570px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
-      <table class="table table-striped table-hover table-bordered align-middle">
+    <div class="rounded-2" style="max-height: 570px; overflow-y: auto;">
+      <table class="table table-sm table-striped table-hover table-bordered align-middle">
         <thead class="table-dark text-center sticky-top">
           <tr>
             <th scope="col">Id Militar</th>
@@ -124,13 +131,13 @@
                 <div class="hstak">
                 {% if current_user.id != user.id %}
                   <a href="{{ url_for('user.home') }}" class="btn btn-secondary" ><i class="bi bi-pencil-square"></i></a>
-                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-user-id="{{ user.id }}">
+                  <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-user-id="{{ user.id }}">
                     <i class="bi bi-trash3-fill"></i>
                 </button>
                 
                 {% else %}
                   <button class="btn btn-secondary" disabled><i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-secondary" disabled><i class="bi bi-trash3-fill"></i></button>
+                  <button class="btn btn-secondary m-1" disabled><i class="bi bi-trash3-fill"></i></button>
                 {% endif %}
                 </div>
               </td>
