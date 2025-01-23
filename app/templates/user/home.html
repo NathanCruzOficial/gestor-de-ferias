@@ -5,13 +5,19 @@
 {% block content %}    
 <div class="row">
     <div class="col-lg-4">
-        <div class="text-bg-dark bg-dark p-3 rounded-1 shadow justify-content-lg-center">
-            <h3>Bem-vindo, {{ current_user.nome_completo.split(' ')[0] }}!</h3>
+        <div class="text-bg-dark bg-dark p-3 rounded-1 shadow">
+            <h3 class="text-center">Bem-vindo, {{ current_user.nome_completo.split(' ')[0] }}!</h3>
+            <hr>
+
+            <h4>{{ current_user.organizacao.name }}</h4>
+            <h4>{{ current_user.secao.section }}</h4>
+            <hr>
             <p>
-                Posto: {{ current_user.posto_grad }} <br>
-                Dias disponíveis: {{ current_user.dias_disp }} dias
+                Posto: {{ current_user.patente.posto }} <br>
+                Dias disponíveis: {{ current_user.dias_disp }} dias <br>
+                Identidade Militar : {{ current_user.military_id }}
             </p>
-            <button class="btn btn-outline-light">Editar Perfil</button>
+            <a href="{{ url_for('user.edit', user_id= current_user.id) }}" class="btn btn-outline-light">Editar Perfil</a>
         </div>
     </div>
 <!-- =======================================Registrar Férias=========================================== -->
@@ -44,8 +50,8 @@
                 <button type="submit" class="btn btn-outline-success px-5">Registrar</button>
                 {% else %}
                 <div class="text-center">
-                    <h1 class="h3 p-2 text-bg-warning">Aviso:</h1>
-                    <p class="text-info text-black"> Seus dias de dispensa terminaram!</p>
+                    <h1 class="h3 p-2 text-bg-warning text-white"> <strong>Aviso:</strong></h1>
+                    <h1 class="text-info text-black pt-lg-5 pt-3 h1"> <strong> Seus dias de dispensa terminaram! </strong></h1>
                 </div>
                 {% endif %}
             </form>
@@ -60,6 +66,7 @@
                 <table class="table table-sm table-striped">
                     <thead class="table-dark">
                         <tr>
+                            <th>Data do Registro</th>
                             <th>Dias</th>
                             <th>Data de Início</th>
                             <th>Data de Fim</th>
@@ -71,22 +78,23 @@
                     <tbody>
                         {% for f in ferias %}
                         <tr>
+                            <td>{{ f.data_registro }}</td>
                             <td>{{ f.dias }}</td>
                             <td>{{ f.data_inicio }}</td>
                             <td>{{ f.data_fim }}</td>
                             <td>{{ f.destino }}</td>
                             <td>{{ f.motivo }}</td>
-                            {% if f.status == 0 %}
-                                <td class="bg-secondary">Em Análise</td>
-                                {% elif f.status == 1 %}
-                                <td class="bg-primary">Aprovada</td>
-                                {% elif f.status == 2 %}
-                                <td class="bg-danger">Negada</td>
-                                {% elif f.status == 3 %}
-                                <td class="bg-success">Retirada</td>
-                                {% elif f.status == 4 %}
-                                <td class="bg-warning">Em Andamento</td>
-                            {% endif %}
+                            {% if f.state.id == 1 %}
+                                <td class="bg-secondary">{{ f.state.desc }}</td>
+                                {% elif f.state.id == 2 %}
+                                <td class="bg-primary">{{ f.state.desc }}</td>
+                                {% elif f.state.id == 3 %}
+                                <td class="bg-danger">{{ f.state.desc }}</td>
+                                {% elif f.state.id == 4 %}
+                                <td class="bg-success">{{ f.state.desc }}</td>
+                                {% elif f.state.id == 5 %}
+                                <td class="bg-warning">Em {{ f.state.desc }}</td>
+                                {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

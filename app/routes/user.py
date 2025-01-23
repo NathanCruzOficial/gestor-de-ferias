@@ -1,10 +1,12 @@
-from app.models.tables import User , Vacations
+from app.models.tables import Patente, User , Vacation
 from app.controllers import crud
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import logout_user, login_required, current_user
 from app.models.forms import RegisterForm, VacationForm
 from functools import wraps
+
+
 
 # Isntânciando o Blueprint
 user_bp = Blueprint('user', __name__)
@@ -17,7 +19,7 @@ def required_level(level_required):
             if not current_user.is_authenticated:
                 return redirect(url_for('auth.login'))
             if int(current_user.nivel) < level_required:
-                return redirect(url_for('user.user'))  # Redireciona para uma página segura
+                return redirect(url_for('user.home'))  # Redireciona para uma página segura
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -33,17 +35,19 @@ def require_login():
 # Página principal
 @user_bp.route('/', methods=['GET', 'POST'])
 def home():
-    my_vacations = Vacations.query.filter_by(user_id=current_user.id).order_by(Vacations.id.desc()).all()
+    my_vacations = Vacation.query.filter_by(fg_users_id=current_user.id).order_by(Vacation.id.desc()).all()
     form = VacationForm()
     if form.validate_on_submit():
-        if current_user.dias_disp > 0:
+        if current_user.dias_disp == 0:
+            fg_users_id = current_user.id
             data_inicio = form.data_inicio.data
             data_fim = form.data_fim.data
-            user_id = current_user.id
             destino = form.destino.data
             motivo = form.motivo.data
+            fg_states_id = 1
 
-            registro_ferias = Vacations(user_id, data_inicio, data_fim, destino, motivo, status=0)
+            registro_ferias = Vacation( fg_users_id, fg_states_id, data_inicio, data_fim, destino, motivo)
+            
             crud.create(registro_ferias)
             return redirect(url_for("user.home"))
         else:
@@ -54,7 +58,7 @@ def home():
 @user_bp.route('/ferias')
 @required_level(2)
 def ferias():
-    vacations = Vacations.query.join(User).all()
+    vacations = Vacation.query.join(User).all()
     return render_template("user/ferias.html", registros = vacations)
 
 @user_bp.route('/imprimir')
@@ -69,30 +73,39 @@ def register():
     users = User.query.all()
     if form.validate_on_submit():
       # Aqui o registro seria processado.
-        username = str(form.username.data)
-        username = username.upper()
+        nome_guerra = str(form.username.data)
+        nome_guerra = nome_guerra.upper()
+
+        fg_secao_id = form.secao.data
 
         password = form.password.data
         confirm_password = form.confirm_password.data
 
         military_id = form.military_id.data
 
-        organization = form.organization.data
+        fg_organization_id = form.organization.data
 
         nome_completo = str(form.nome_completo.data)
         nome_completo = nome_completo.upper()
 
-        posto_grad = form.posto_grad.data
+        fg_patente_id = form.patente.data
+
         data_nascimento = form.data_nascimento.data
         nivel = form.nivel.data
         email = str(form.email.data)
         email = email.lower()
         telefone = form.telefone.data
 
+        dias_disp = current_user.dias_disp
+
+        p = Patente.query.get(fg_patente_id)
+        username = p.abrev+nome_guerra
+
         if confirm_password == password:
-            if username in nome_completo:
+            if nome_guerra in nome_completo:
                 if not User.query.filter_by(nome_completo=nome_completo).first():
-                    user = User(username=username, password=password, military_id=military_id, organization=organization,nome_completo=nome_completo,dias_disp=0, posto_grad=posto_grad, data_nascimento=data_nascimento, nivel=nivel, email=email, telefone=telefone)
+                    user = User( username, password, military_id, nome_completo, nome_guerra, data_nascimento, nivel,dias_disp, email, telefone, fg_patente_id, fg_organization_id, fg_secao_id)
+        
 
                     crud.create(user)
                     flash('Registro realizado com sucesso!', 'success')
@@ -114,8 +127,22 @@ def register():
 
 @user_bp.route('/edit/<int:user_id>', methods=['GET','POST'])
 def edit(user_id):
-    users = User.query.all()  # Pegue todos os usuários
-    return render_template('user/registrador.html', users=users)
+
+    user = User.query.filter_by(id=user_id).first()  # Pegue o usuário do registro
+    form = RegisterForm()
+    print(user)
+    print(user.id)
+    print(current_user.id)
+
+    if current_user.id == user.id:
+        print("case-1")
+        return render_template('user/editor_user.html', user=user, form=form)
+    elif current_user.id != user.id and current_user.nivel == 3:
+        print("case-2")
+        return render_template('user/editor_user.html', user=user, form=form)
+    else:
+        print("case-3")
+        return redirect(url_for("user.home"))
 
 @user_bp.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @required_level(3)

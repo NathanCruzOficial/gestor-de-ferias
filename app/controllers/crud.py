@@ -19,21 +19,8 @@ def delete_user(user):
 def create_admin():
     count = User.query.count()
     if count == 0:  # Tabela vazia
-        data_nascimento = datetime.today().date()
-        admin_user = User(
-            username="CRUZ",
-            password="1234",
-            military_id="2",
-            organization="Cia C GUEs - 9ª Bda Inf Mtz",
-            nome_completo="NATHAN DA CRUZ CARDOSO",
-            dias_disp=0,
-            posto_grad="Soldado",
-            data_nascimento=data_nascimento,
-            nivel=3,
-            email="admin@eb.mil.br",
-            telefone="11912645678"
-        )
-        create(admin_user)
+        ...
+
 
 # Função para atualizar um usuário
 def update(user_id, new_data):

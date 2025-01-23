@@ -1,13 +1,13 @@
 <ul class="nav nav-underline mb-2 justify-content-md-start justify-content-center pe-auto">
-  <li><a href="{{ url_for('user.home') }}" class="nav-link {% if request.endpoint == 'user.home' %}text-white{% else %}text-secondary{% endif %}">Perfil</a></li>
-  <li><a href="{{ url_for('user.ferias') }}" class="nav-link {% if request.endpoint == 'user.historico' %}text-white{% else %}text-secondary{% endif %}">Férias</a></li>
-
+  <li><a href="{{ url_for('user.home') }}" class="nav-link ms-2 {% if request.endpoint == 'user.home' %}text-white{% else %}text-secondary{% endif %}">Perfil</a></li>
+  
   {% if current_user.nivel >= 2 %}
-      <li><a href="{{ url_for('user.imprimir') }}" class="nav-link {% if request.endpoint == 'user.imprimir' %}text-white{% else %}text-secondary{% endif %}">Imprimir</a></li>
+    <li><a href="{{ url_for('user.ferias') }}" class="nav-link {% if request.endpoint == 'user.ferias' %}text-white{% else %}text-secondary{% endif %}">Férias</a></li>
+     <li><a href="{{ url_for('user.imprimir') }}" class="nav-link ms-2 {% if request.endpoint == 'user.imprimir' %}text-white{% else %}text-secondary{% endif %}">Imprimir</a></li>
   {% endif %}
 
   {% if current_user.nivel >= 3 %}
-      <li><a href="{{ url_for('user.register') }}" class="nav-link {% if request.endpoint == 'user.register' %}text-white{% else %}text-secondary{% endif %}">Registrador</a></li>
-      <li><a href="{{ url_for('user.config') }}" class="nav-link {% if request.endpoint == 'user.config' %}text-white{% else %}text-secondary{% endif %}">Configurações</a></li>
+    <li><a href="{{ url_for('user.register') }}" class="nav-link ms-2 {% if request.endpoint == 'user.register' %}text-white{% else %}text-secondary{% endif %}">Registrador</a></li>
+    <li><a href="{{ url_for('user.config') }}" class="nav-link ms-2 {% if request.endpoint == 'user.config' %}text-white{% else %}text-secondary{% endif %}">Configurações</a></li>
   {% endif %}
 </ul>

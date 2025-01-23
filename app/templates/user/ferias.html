@@ -13,7 +13,7 @@
         <th scope="col">Posto/Grad</th>
         <th scope="col">Usuário</th>
         <th scope="col">Dias disponíveis</th>
-        <th scope="col">Dias</th>
+        <th scope="col">Data do Registro</th>
         <th scope="col">Data de Início</th>
         <th scope="col">Data de Fim</th>
         <th scope="col">Situação</th>
@@ -24,22 +24,22 @@
       {% for ferias in registros %}
         <!-- Exibe o botão de deletar para todos, exceto o usuário logado -->
         <tr class="text-center">
-          <td>{{ ferias.usuarios.posto_grad }}</td>
-          <td>{{ ferias.usuarios.username }}</td>
-          <td>{{ ferias.usuarios.dias_disp }}</td>
+          <td>{{ ferias.user.patente.posto }}</td>
+          <td>{{ ferias.user.nome_guerra }}</td>
           <td>{{ ferias.dias }}</td>
+          <td class="table-active" >{{ ferias.data_registro }}</td>
           <td>{{ ferias.data_inicio }}</td>
           <td>{{ ferias.data_fim }}</td>
-          {% if ferias.status == 0 %}
-          <td class="bg-secondary">Em Análise</td>
-          {% elif ferias.status == 1 %}
-          <td class="bg-primary">Aprovada</td>
-          {% elif ferias.status == 2 %}
-          <td class="bg-danger">Negada</td>
-          {% elif ferias.status == 3 %}
-          <td class="bg-success">Retirada</td>
-          {% elif ferias.status == 4 %}
-          <td class="bg-warning">Em Andamento</td>
+          {% if ferias.state.id == 1 %}
+          <td class="bg-secondary">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 2 %}
+          <td class="bg-primary">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 3 %}
+          <td class="bg-danger">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 4 %}
+          <td class="bg-success">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 5 %}
+          <td class="bg-warning">Em {{ ferias.state.desc }}</td>
           {% endif %}
           <td>
             <div class="hstak">

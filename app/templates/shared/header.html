@@ -39,7 +39,7 @@
       </div>
 
       <div class="col-md-3 col-11 hstack order-3 accordion justify-content-end">
-        <h6 class="me-3" role="search">{{ current_user.posto_grad + " " + current_user.username }}</h6>
+        <h6 class="me-3" role="search">{{ current_user.patente.posto + " " + current_user.nome_guerra }}</h6>
       
         <a href="{{ url_for('user.logout') }}" class="btn btn-outline-light me-2">Sair</a>
 

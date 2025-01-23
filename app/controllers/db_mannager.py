@@ -1,5 +1,5 @@
 from app import app,db
-from app.models.tables import User, Vacations
+from app.models.tables import User, Vacation
 from app.controllers import crud
 
 def reset_users():

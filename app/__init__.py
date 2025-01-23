@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_login import LoginManager
+from flask_login import LoginManager 
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -22,6 +22,7 @@ lm.login_view = 'auth.login'
 from app.controllers import home
 from app.controllers import db_mannager
 from app.models import tables
+  
 
 # Definindo o comando CLI para migrações
 @app.cli.command("db_migrate")

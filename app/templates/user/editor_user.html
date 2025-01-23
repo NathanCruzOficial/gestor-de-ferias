@@ -1,0 +1,105 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Registrador{% endblock %}
+
+{% block head %}
+    <link href="{{ url_for('static', filename = 'css/sign-in.css')}}" rel="stylesheet" >
+{% endblock %}
+
+{% block content %}
+<div class="row" >
+
+<!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
+  <div class="col-12 p-3 bg-white rounded-3 shadow">
+    <!-- formulário -->
+    <form action="{{ url_for('user.edit',user_id=user.id) }}" method="post">
+      {{ form.csrf_token }}
+
+    
+
+    <div class="row-cols-1 row justify-content-around"> 
+      <div class="col-5">
+         <h1 class="h3 mb-3 fw-normal}">Registrar Usuário</h1>
+
+        <!-- Campo OM -->
+        <label for="organization" class="form-label" >Organização:</label>
+        <div class="input-group mb-1">
+        {{ form.organization(class="form-control", disabled=(current_user.nivel != 3), _name="organization ", id="organization", placeholder="OM") }}
+        {{ form.secao(class="form-control", _name="secao", disabled=(current_user.nivel != 3), id="secao", placeholder="Seção") }}
+        </div>
+
+        <!-- Campo Username -->
+        <div class="mb-1">
+          <label for="username" class="form-label">Nome de Guerra:</label>
+          <div class="input-group mb-1 ">
+            {{ form.patente(class="form-control",disabled=(current_user.nivel != 3), _name="patente", id="patente", placeholder="p/g") }}
+            {{ form.username(class="form-control  text-uppercase",disabled=(current_user.nivel != 3),_name="nome_completo", id="username", placeholder="Nome de Guerra") }}
+          </div>
+        </div>
+
+        <div class=" hstack justify-content-between">
+        <!-- Campo de Senha -->
+          <label for="password" class="form-label">Senha:</label>
+
+        <!-- Botão para alternar a visualização das senhas -->
+          <button type="button" class="btn btn-outline" id="togglePassword">
+              <i class="bi bi-eye" id="toggleIcon"></i>
+              <span> Mostrar Senhas</span>
+          </button>
+        </div>
+
+
+        {{ form.password(class="form-control mb-1", _name="password", id="password", placeholder="Digite sua Senha") }}
+        <!-- Campo de Confirmar Senha -->
+        {{ form.confirm_password(class="form-control", _name="confirm_password", id="confirm_password", placeholder="Confirme sua Senha") }}
+
+        
+
+        <!-- nivel -->
+        <div class="input-group mt-3 mb-1">
+          <label class="input-group-text"  for="nivel">Autoridade:</label>
+          {{ form.nivel(class="form-control",disabled=(current_user.nivel != 3), _name="nivel", id="nivel", placeholder="senha") }}
+      </div>
+
+      <hr>
+
+      </div>
+        <div class="col-5">
+        <h1 class="h3 mb-3 fw-normal">Dados Pessoais</h1>
+
+        <!-- id militar -->
+        {{ form.military_id(class="mb-1 form-control",disabled=(current_user.nivel != 3), _name="military_id", id="military_id", placeholder="Identidade Militar") }}
+
+        <!-- nome_completo -->
+        {{ form.nome_completo(class="mb-1 form-control text-uppercase",disabled=(current_user.nivel != 3), _name="nome_completo", id="nome_completo", placeholder="Nome Completo") }}
+
+        <!-- data_nascimento -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
+        {{ form.data_nascimento(class="form-control", disabled=(current_user.nivel != 3), _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
+        </div>
+
+        <!-- email -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="email">Email:</label>
+          {{ form.email(class="form-control text-lowercase", _name="email", id="email", placeholder="@email.com") }}
+        </div>
+
+        <!-- telefone -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="telefone">Contato:</label>
+          {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="21912345678") }}
+        </div>
+
+        <label class="form-text"> Preencha os dados com cuidado.</label>
+
+        <!-- submit -->
+        <div class="">
+          {{ form.submit(class="btn btn-primary my-3") }}
+        </div>
+        </form>
+      </div>
+  </div>
+  </div>
+
+{% endblock %}
