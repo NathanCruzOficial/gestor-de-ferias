@@ -31,7 +31,7 @@
           <label for="username" class="form-label">Nome de Guerra:</label>
           <div class="input-group mb-1 ">
             {{ form.patente(class="form-control", _name="patente", id="patente", placeholder="p/g") }}
-            {{ form.username(class="form-control  text-uppercase",_name="nome_completo", id="username", placeholder="Nome de Guerra") }}
+            {{ form.nome_guerra(class="form-control  text-uppercase",_name="nome_guerra", id="nome_guerra", placeholder="Nome de Guerra") }}
           </div>
         </div>
 
@@ -74,7 +74,7 @@
         <!-- data_nascimento -->
         <div class="input-group mb-1">
           <label class="input-group-text" for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
-        {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="senha") }}
+        {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="Data de Nascimento") }}
         </div>
 
         <!-- email -->

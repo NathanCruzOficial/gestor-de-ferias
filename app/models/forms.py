@@ -33,19 +33,19 @@ class LoginForm(FlaskForm):
 class RegisterForm(FlaskForm):
     nvls = [('1', 'Usuário'), ('2', 'Fiscal'), ('3', 'Administrador')]
 
-    username = StringField("usuário", validators=[DataRequired()])
+    nome_guerra = StringField("nome_guerra", validators=[DataRequired()])
     password = PasswordField("senha", validators=[DataRequired()])
     confirm_password = PasswordField("confirmar senha", validators=[ DataRequired()])
 
     military_id = StringField("id militar", validators=[DataRequired()])
-    patente = SelectField("posto/graduação", choices=[], validators=[DataRequired()])
+    patente = SelectField("patente", choices=[], validators=[DataRequired()])
     nome_completo = StringField("nome completo", validators=[DataRequired()])
     organization = SelectField("posto/graduação", choices=[], validators=[DataRequired()])
     secao = SelectField("Seção", choices=[], validators=[DataRequired()])
 
-    data_nascimento = DateField("data de nascimento", format='%d-%m-%Y', validators=[DataRequired()], render_kw={
-            'max': (date.today() - relativedelta(years=19)).strftime('%d-%m-%Y'),  # Máximo: data atual
-            'min': (date.today() - relativedelta(years=130)).strftime('%d-%m-%Y')  # Mínimo: 100 anos atrás
+    data_nascimento = DateField("data de nascimento", format='%Y-%m-%d', validators=[DataRequired()], render_kw={
+            'max': (date.today() - relativedelta(years=19)).strftime('%Y-%m-%d'),  # Máximo: data atual
+            'min': (date.today() - relativedelta(years=130)).strftime('%Y-%m-%d')  # Mínimo: 100 anos atrás
         })
     nivel = SelectField("nivel", choices=nvls, validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired(), Email()])
@@ -65,6 +65,7 @@ class RegisterForm(FlaskForm):
             self.secao.choices = [
                 (secao.id, secao.section) for secao in Secao.query.all()
             ]
+            
 
 class VacationForm(FlaskForm):
 

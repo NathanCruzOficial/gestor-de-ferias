@@ -72,8 +72,9 @@ def register():
     form = RegisterForm()
     users = User.query.all()
     if form.validate_on_submit():
+        print(form)
       # Aqui o registro seria processado.
-        nome_guerra = str(form.username.data)
+        nome_guerra = str(form.nome_guerra.data)
         nome_guerra = nome_guerra.upper()
 
         fg_secao_id = form.secao.data
@@ -103,7 +104,7 @@ def register():
 
         if confirm_password == password:
             if nome_guerra in nome_completo:
-                if not User.query.filter_by(nome_completo=nome_completo).first():
+                if not User.query.filter_by(nome_completo=nome_completo,fg_organization_id=fg_organization_id).first():
                     user = User( username, password, military_id, nome_completo, nome_guerra, data_nascimento, nivel,dias_disp, email, telefone, fg_patente_id, fg_organization_id, fg_secao_id)
         
 
@@ -129,20 +130,21 @@ def register():
 def edit(user_id):
 
     user = User.query.filter_by(id=user_id).first()  # Pegue o usuário do registro
-    form = RegisterForm()
-    print(user)
-    print(user.id)
-    print(current_user.id)
+    # user_dict = user.to_dict()
+    form = RegisterForm(obj=user)
+
+    if form.validate_on_submit:
+        novas_informacoes = User.from_form(form=form, user=user)
+        print(novas_informacoes)
 
     if current_user.id == user.id:
-        print("case-1")
         return render_template('user/editor_user.html', user=user, form=form)
     elif current_user.id != user.id and current_user.nivel == 3:
-        print("case-2")
         return render_template('user/editor_user.html', user=user, form=form)
     else:
-        print("case-3")
         return redirect(url_for("user.home"))
+    
+    
 
 @user_bp.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @required_level(3)

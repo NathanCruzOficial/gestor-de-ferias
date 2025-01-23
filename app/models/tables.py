@@ -57,6 +57,30 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return str(self.id)  # Retorne o ID como string, necessário para o Flask-Login
+
+    @classmethod
+    def from_form(cls, form, user): #Rece um formulário como parametro
+        nome_guerra = str(form.nome_guerra.data).upper()
+        nome_completo = str(form.nome_completo.data).upper()
+        email = str(form.email.data).lower()
+        password = form.password.data
+
+        return cls(
+            username=Patente.query.get(form.patente.data).abrev + nome_guerra,
+            password=password,
+            military_id=form.military_id.data,
+            nome_completo=nome_completo,
+            nome_guerra=nome_guerra,
+            data_nascimento=form.data_nascimento.data,
+            nivel=form.nivel.data,
+            dias_disp=user.dias_disp,
+            email=email,
+            telefone=form.telefone.data,
+            fg_patente_id=form.patente.data,
+            fg_organization_id=form.organization.data,
+            fg_secao_id=form.secao.data,
+        )
+    
     
     def __repr__(self):
         return f"<User {self.id}>"
