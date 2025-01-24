@@ -38,10 +38,10 @@ class RegisterForm(FlaskForm):
     confirm_password = PasswordField("confirmar senha", validators=[ DataRequired()])
 
     military_id = StringField("id militar", validators=[DataRequired()])
-    patente = SelectField("patente", choices=[], validators=[DataRequired()])
+    fg_patente_id = SelectField("patente", choices=[], validators=[DataRequired()])
     nome_completo = StringField("nome completo", validators=[DataRequired()])
-    organization = SelectField("posto/graduação", choices=[], validators=[DataRequired()])
-    secao = SelectField("Seção", choices=[], validators=[DataRequired()])
+    fg_organization_id = SelectField("Organização", choices=[], validators=[DataRequired()])
+    fg_secao_id = SelectField("Seção", choices=[], validators=[DataRequired()])
 
     data_nascimento = DateField("data de nascimento", format='%Y-%m-%d', validators=[DataRequired()], render_kw={
             'max': (date.today() - relativedelta(years=19)).strftime('%Y-%m-%d'),  # Máximo: data atual
@@ -56,13 +56,13 @@ class RegisterForm(FlaskForm):
         super(RegisterForm, self).__init__(*args, **kwargs)
         # Preenche o campo de patente com dados do banco
         with app.app_context():
-            self.patente.choices = [
+            self.fg_patente_id.choices = [
                 (patente.id, patente.posto) for patente in Patente.query.all()
             ]
-            self.organization.choices = [
+            self.fg_organization_id.choices = [
                 (om.id, om.name) for om in Organizacao.query.all()
             ]
-            self.secao.choices = [
+            self.fg_secao_id.choices = [
                 (secao.id, secao.section) for secao in Secao.query.all()
             ]
             

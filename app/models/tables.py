@@ -37,7 +37,7 @@ class User(db.Model, UserMixin):
     ferias = db.relationship("Vacation",  back_populates='user')
 
 
-    def __init__(self,username, password, military_id, nome_completo, nome_guerra, data_nascimento, nivel,dias_disp, email, telefone, fg_patente_id, fg_organization_id, fg_secao_id):
+    def __init__(self, password="1234", military_id=None, nome_completo=None, nome_guerra=None, data_nascimento=None, nivel=None, email=None, telefone=None, fg_patente_id=None, fg_organization_id=None, fg_secao_id=None,username=None, dias_disp=0):
         
         self.patente = Patente.query.get(fg_patente_id)
         self.organizacao = Organizacao.query.get(fg_organization_id)
@@ -57,33 +57,9 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return str(self.id)  # Retorne o ID como string, necessário para o Flask-Login
-
-    @classmethod
-    def from_form(cls, form, user): #Rece um formulário como parametro
-        nome_guerra = str(form.nome_guerra.data).upper()
-        nome_completo = str(form.nome_completo.data).upper()
-        email = str(form.email.data).lower()
-        password = form.password.data
-
-        return cls(
-            username=Patente.query.get(form.patente.data).abrev + nome_guerra,
-            password=password,
-            military_id=form.military_id.data,
-            nome_completo=nome_completo,
-            nome_guerra=nome_guerra,
-            data_nascimento=form.data_nascimento.data,
-            nivel=form.nivel.data,
-            dias_disp=user.dias_disp,
-            email=email,
-            telefone=form.telefone.data,
-            fg_patente_id=form.patente.data,
-            fg_organization_id=form.organization.data,
-            fg_secao_id=form.secao.data,
-        )
-    
     
     def __repr__(self):
-        return f"<User {self.id}>"
+        return f"<User {self.id}, {self.nome_guerra}>"
 
     def check_password(self, password):
         return check_password_hash(self.password, password)  # Método para verificar a senha

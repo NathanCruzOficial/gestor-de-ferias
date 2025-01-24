@@ -20,17 +20,17 @@
          <h1 class="h3 mb-3 fw-normal">Registrar Usuário</h1>
 
         <!-- Campo OM -->
-        <label for="organization" class="form-label">Organização:</label>
+        <label for="fg_organization_id" class="form-label">Organização:</label>
         <div class="input-group mb-1">
-        {{ form.organization(class="form-control", _name="organization", id="organization", placeholder="OM") }}
-        {{ form.secao(class="form-control", _name="secao", id="secao", placeholder="Seção") }}
+        {{ form.fg_organization_id(class="form-control", _name="fg_organization_id", id="fg_organization_id", placeholder="OM") }}
+        {{ form.fg_secao_id(class="form-control", _name="fg_secao_id", id="fg_secao_id", placeholder="Seção") }}
         </div>
 
         <!-- Campo Username -->
         <div class="mb-1">
           <label for="username" class="form-label">Nome de Guerra:</label>
           <div class="input-group mb-1 ">
-            {{ form.patente(class="form-control", _name="patente", id="patente", placeholder="p/g") }}
+            {{ form.fg_patente_id(class="form-control", _name="fg_patente_id", id="fg_patente_id", placeholder="p/g") }}
             {{ form.nome_guerra(class="form-control  text-uppercase",_name="nome_guerra", id="nome_guerra", placeholder="Nome de Guerra") }}
           </div>
         </div>

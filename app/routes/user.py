@@ -72,43 +72,30 @@ def register():
     form = RegisterForm()
     users = User.query.all()
     if form.validate_on_submit():
-        print(form)
-      # Aqui o registro seria processado.
-        nome_guerra = str(form.nome_guerra.data)
-        nome_guerra = nome_guerra.upper()
+        print(form.errors)
+        if form.confirm_password.data == form.password.data:
+            if form.nome_guerra.data in (form.nome_completo.data).split(" "):
+                if not User.query.filter_by(nome_completo=form.nome_completo.data,fg_organization_id=form.fg_organization_id.data).first():
+                    novo_usuario = User()
+                    print("Novo Usuário: ",novo_usuario)
+                    form.populate_obj(novo_usuario)
 
-        fg_secao_id = form.secao.data
 
-        password = form.password.data
-        confirm_password = form.confirm_password.data
+                    print(form.fg_secao_id.data," ",form.fg_organization_id.data)
 
-        military_id = form.military_id.data
+                    print("Novo Usuário: ",novo_usuario)
 
-        fg_organization_id = form.organization.data
+                    patente = Patente.query.get(form.fg_patente_id.data)
 
-        nome_completo = str(form.nome_completo.data)
-        nome_completo = nome_completo.upper()
+                    novo_usuario.username = patente.abrev+novo_usuario.nome_guerra
+                    novo_usuario.dias_disp = 0
 
-        fg_patente_id = form.patente.data
+                    print(novo_usuario)
 
-        data_nascimento = form.data_nascimento.data
-        nivel = form.nivel.data
-        email = str(form.email.data)
-        email = email.lower()
-        telefone = form.telefone.data
+                    #User(): username, password, military_id, nome_completo, nome_guerra, data_nascimento, nivel, dias_disp, email, telefone, patente, organizacao, secao
+                    #Form():           password, military_id, nome_completo, nome_guerra, data_nascimento, nivel,          , email, telefone, patente, organization, secao
 
-        dias_disp = current_user.dias_disp
-
-        p = Patente.query.get(fg_patente_id)
-        username = p.abrev+nome_guerra
-
-        if confirm_password == password:
-            if nome_guerra in nome_completo:
-                if not User.query.filter_by(nome_completo=nome_completo,fg_organization_id=fg_organization_id).first():
-                    user = User( username, password, military_id, nome_completo, nome_guerra, data_nascimento, nivel,dias_disp, email, telefone, fg_patente_id, fg_organization_id, fg_secao_id)
-        
-
-                    crud.create(user)
+                    crud.create(novo_usuario)
                     flash('Registro realizado com sucesso!', 'success')
                     return redirect(url_for('user.register'))
                 else:
