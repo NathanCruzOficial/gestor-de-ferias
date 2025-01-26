@@ -1,9 +1,10 @@
+from click import pass_obj
 from app.models.tables import Patente, User , Vacation
 from app.controllers import crud, db_mannager
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import logout_user, login_required, current_user
-from app.models.forms import RegisterForm, VacationForm
+from app.models.forms import RegisterForm, UpdateForm, VacationForm
 from functools import wraps
 
 
@@ -95,23 +96,32 @@ def register():
 @user_bp.route('/edit/<int:user_id>', methods=['GET','POST'])
 def edit(user_id):
 
-    user = User.query.get(user_id)  # Pegue o usuário do registro
-    # user_dict = user.to_dict()
-    form = RegisterForm(obj=user)
-    form.submit = False
+    user_atual = User.query.filter_by(id=user_id).first()  # Pegue o usuário do registro
+    form = UpdateForm(obj = user_atual)
 
-    if form.validate_on_submit:
-        if not db_mannager.user_not_exists(form):
-            message,type = db_mannager.update_user(form)
-            flash(message, type)
-            # return redirect(url_for('user.edit', user_id=user.id))
+    if form.validate_on_submit():
+        db_mannager.update_user(user_atual,form)
 
-    if current_user.id == user.id:
-        return render_template('user/editor_user.html', user=user, form=form)
-    elif current_user.id != user.id and current_user.nivel == 3:
-        return render_template('user/editor_user.html', user=user, form=form)
+        # user_novo = db_mannager.instance_user_with_form(form)
+        # if user_atual == user_novo:
+        #     print("igual")
+        # else:
+        #     print("diferente")
+        # if db_mannager.user_not_exists(form):
+        #     print("passou")
+        # else:
+        #     print("Dados já existem")
+
+    if current_user.id == user_atual.id:
+        print("case-1")
+        return render_template('user/editor_user.html', user_atual=user_atual, form=form)
+    elif current_user.id != user_atual.id and current_user.nivel == 3:
+        print("case-2")
+        return render_template('user/editor_user.html', user_atual=user_atual, form=form)
     else:
+        print("case-3")
         return redirect(url_for("user.home"))
+    
     
     
 

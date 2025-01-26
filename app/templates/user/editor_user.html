@@ -12,9 +12,8 @@
 <!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
   <div class="col-12 p-3 bg-white rounded-3 shadow">
     <!-- formulário -->
-    <form action="{{ url_for('user.edit',user_id=user.id) }}" method="post">
+    <form action="{{ url_for('user.edit',user_id=user_atual.id) }}" method="POST">
       {{ form.csrf_token }}
-
     
 
     <div class="row-cols-1 row justify-content-around"> 
@@ -36,24 +35,6 @@
             {{ form.nome_guerra(class="form-control  text-uppercase",disabled=(current_user.nivel != 3),_name="nome_guerra", id="nome_guerra", placeholder="Nome de Guerra") }}
           </div>
         </div>
-
-        <div class=" hstack justify-content-between">
-        <!-- Campo de Senha -->
-          <label for="password" class="form-label">Senha:</label>
-
-        <!-- Botão para alternar a visualização das senhas -->
-          <button type="button" class="btn btn-outline" id="togglePassword">
-              <i class="bi bi-eye" id="toggleIcon"></i>
-              <span> Mostrar Senhas</span>
-          </button>
-        </div>
-
-
-        {{ form.password(class="form-control mb-1", _name="password", id="password", placeholder="Digite sua Senha") }}
-        <!-- Campo de Confirmar Senha -->
-        {{ form.confirm_password(class="form-control", _name="confirm_password", id="confirm_password", placeholder="Confirme sua Senha") }}
-
-        
 
         <!-- nivel -->
         <div class="input-group mt-3 mb-1">
@@ -98,7 +79,7 @@
 
         <!-- submit -->
         <div class="">
-          <button type="submit" class="btn btn-success my-3" id="saveButton">Salvar</button>
+          {{ form.submit(class="btn btn-primary my-3") }}
         </div>
         </form>
       </div>
