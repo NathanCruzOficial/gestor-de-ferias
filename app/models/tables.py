@@ -22,12 +22,12 @@ class User(db.Model, UserMixin):
     data_nascimento = db.Column(db.Date, nullable=False)
     nivel = db.Column(db.Integer, nullable=False, default=0)
     dias_disp = db.Column(db.Integer, nullable=False)
-    email = db.Column(db.String(30), nullable=False)
-    telefone = db.Column(db.String(30), nullable=False)
+    email = db.Column(db.String(30), unique=True, nullable=False)
+    telefone = db.Column(db.String(30), unique=True, nullable=False)
 
     fg_secao_id = db.Column(db.Integer, db.ForeignKey('secoes.id'), nullable=False)
     fg_organization_id = db.Column(db.Integer, db.ForeignKey('organizacoes.id'), nullable=False)
-    fg_patente_id = db.Column(db.Integer, db.ForeignKey('patentes.id'), nullable=False, default=1)
+    fg_patente_id = db.Column(db.Integer, db.ForeignKey('patentes.id'), nullable=False)
 
 
     patente = db.relationship("Patente",  back_populates='users')
@@ -39,27 +39,31 @@ class User(db.Model, UserMixin):
 
     def __init__(self, password="1234", military_id=None, nome_completo=None, nome_guerra=None, data_nascimento=None, nivel=None, email=None, telefone=None, fg_patente_id=None, fg_organization_id=None, fg_secao_id=None,username=None, dias_disp=0):
         
-        self.patente = Patente.query.get(fg_patente_id)
-        self.organizacao = Organizacao.query.get(fg_organization_id)
-        self.secao = Secao.query.get(fg_secao_id)
+        # self.patente = Patente.query.get(fg_patente_id)
+        # self.organizacao = Organizacao.query.get(fg_organization_id)
+        # self.secao = Secao.query.get(fg_secao_id)
+
+        self.fg_secao_id = fg_secao_id
+        self.fg_organization_id = fg_organization_id
+        self.fg_patente_id = fg_patente_id
     
-        self.username = username
-        self.nome_guerra = nome_guerra
+        self.username = str(username).upper()
+        self.nome_guerra = str(nome_guerra).upper()
         self.password = generate_password_hash(password)  # Armazenando a senha de forma segura
         self.military_id = military_id
-        self.nome_guerra = nome_guerra
-        self.nome_completo = nome_completo
+        self.nome_completo = str(nome_completo).upper()
         self.data_nascimento = data_nascimento
         self.nivel = nivel
         self.dias_disp = dias_disp
-        self.email = email
+        self.email = str(email).lower()
         self.telefone = telefone
+        
 
     def get_id(self):
         return str(self.id)  # Retorne o ID como string, necessário para o Flask-Login
     
     def __repr__(self):
-        return f"<User {self.id}, {self.nome_guerra}>"
+        return f"<User {self.username},id: {self.id}>"
 
     def check_password(self, password):
         return check_password_hash(self.password, password)  # Método para verificar a senha

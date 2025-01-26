@@ -1,11 +1,10 @@
 from app.models.tables import Patente, User , Vacation
-from app.controllers import crud
+from app.controllers import crud, db_mannager
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import logout_user, login_required, current_user
 from app.models.forms import RegisterForm, VacationForm
 from functools import wraps
-
 
 
 # Isntânciando o Blueprint
@@ -72,31 +71,11 @@ def register():
     form = RegisterForm()
     users = User.query.all()
     if form.validate_on_submit():
-        print(form.errors)
         if form.confirm_password.data == form.password.data:
-            if form.nome_guerra.data in (form.nome_completo.data).split(" "):
-                if not User.query.filter_by(nome_completo=form.nome_completo.data,fg_organization_id=form.fg_organization_id.data).first():
-                    novo_usuario = User()
-                    print("Novo Usuário: ",novo_usuario)
-                    form.populate_obj(novo_usuario)
-
-
-                    print(form.fg_secao_id.data," ",form.fg_organization_id.data)
-
-                    print("Novo Usuário: ",novo_usuario)
-
-                    patente = Patente.query.get(form.fg_patente_id.data)
-
-                    novo_usuario.username = patente.abrev+novo_usuario.nome_guerra
-                    novo_usuario.dias_disp = 0
-
-                    print(novo_usuario)
-
-                    #User(): username, password, military_id, nome_completo, nome_guerra, data_nascimento, nivel, dias_disp, email, telefone, patente, organizacao, secao
-                    #Form():           password, military_id, nome_completo, nome_guerra, data_nascimento, nivel,          , email, telefone, patente, organization, secao
-
-                    crud.create(novo_usuario)
-                    flash('Registro realizado com sucesso!', 'success')
+            if str(form.nome_guerra.data).upper() in str(form.nome_completo.data).upper().split(" "):
+                if not db_mannager.user_not_exists(form):
+                    message,type = db_mannager.create_user(form)
+                    flash(message, type)
                     return redirect(url_for('user.register'))
                 else:
                     flash('Usuário Já Existe!', 'danger')
@@ -116,13 +95,16 @@ def register():
 @user_bp.route('/edit/<int:user_id>', methods=['GET','POST'])
 def edit(user_id):
 
-    user = User.query.filter_by(id=user_id).first()  # Pegue o usuário do registro
+    user = User.query.get(user_id)  # Pegue o usuário do registro
     # user_dict = user.to_dict()
     form = RegisterForm(obj=user)
+    form.submit = False
 
     if form.validate_on_submit:
-        novas_informacoes = User.from_form(form=form, user=user)
-        print(novas_informacoes)
+        if not db_mannager.user_not_exists(form):
+            message,type = db_mannager.update_user(form)
+            flash(message, type)
+            # return redirect(url_for('user.edit', user_id=user.id))
 
     if current_user.id == user.id:
         return render_template('user/editor_user.html', user=user, form=form)

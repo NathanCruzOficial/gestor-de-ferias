@@ -116,6 +116,7 @@
         <thead class="table-dark text-center sticky-top">
           <tr>
             <th scope="col">Id Militar</th>
+            <th scope="col">OM</th>
             <th scope="col">Posto/Grad</th>
             <th scope="col">Nome</th>
             <th scope="col">Seção</th>
@@ -129,6 +130,7 @@
           {% for user in users %}
               <tr class="text-center">
               <td>{{ user.military_id }}</td>
+              <td>{{ user.organizacao.abrev }}</td>
               <td>{{ user.patente.posto }}</td>
               <td>{{ user.nome_guerra }}</td>
               <td>{{ user.secao.section }}</td>

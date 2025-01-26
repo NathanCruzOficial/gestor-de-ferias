@@ -97,6 +97,7 @@ def seed_data():
     # Dados iniciais para a tabela User
     users = [
         {
+            "username":"SDADMIN",
             "password": "1234",  # Você pode armazenar uma hash da senha usando bcrypt ou similar
             "military_id": "123456789",
             "fg_patente_id": 1,  # Relacionado ao ID da patente (exemplo: Soldado = 1)
