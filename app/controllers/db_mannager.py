@@ -85,6 +85,7 @@ def check_user_exists(form):
 
 def update_user(usuario, form):
     with app.app_context():  # Garante que você está no contexto da aplicação
+        
         patente = Patente.query.get(form.fg_patente_id.data)
         patente = str(patente.abrev)
 
@@ -95,31 +96,36 @@ def update_user(usuario, form):
         print("user_atual: ", usuario)
         print("dados_check: ", user_exists)
 
-        if user_exists and user_exists == usuario:            
-            if not data_exists:
+        if user_exists and user_exists == usuario and not data_exists:            
+            # Atualiza os dados do usuário
+            usuario.username =  str(f"{patente}{form.nome_guerra.data}").upper()
+            usuario.military_id = form.military_id.data
+            usuario.nome_completo = str(form.nome_completo.data).upper()
+            usuario.nome_guerra = str(form.nome_guerra.data).upper()
+            usuario.data_nascimento = form.data_nascimento.data
+            usuario.nivel = form.nivel.data
+            usuario.dias_disp = form.dias_disp.data
+            usuario.email = str(form.email.data).lower()
+            usuario.telefone = form.telefone.data
+            usuario.fg_secao_id = form.fg_secao_id.data
+            usuario.fg_organization_id = form.fg_organization_id.data
+            usuario.fg_patente_id = form.fg_patente_id.data
 
-                # Atualiza os dados do usuário
-                usuario.username =  str(f"{patente}{form.nome_guerra.data}").upper()
-                usuario.military_id = form.military_id.data
-                usuario.nome_completo = str(form.nome_completo.data).upper()
-                usuario.nome_guerra = str(form.nome_guerra.data).upper()
-                usuario.data_nascimento = form.data_nascimento.data
-                usuario.nivel = form.nivel.data
-                usuario.dias_disp = form.dias_disp.data
-                usuario.email = str(form.email.data).lower()
-                usuario.telefone = form.telefone.data
-                usuario.fg_secao_id = form.fg_secao_id.data
-                usuario.fg_organization_id = form.fg_organization_id.data
-                usuario.fg_patente_id = form.fg_patente_id.data
-
-                # db.session.commit()  # Salva as alterações no banco
+            try:
+                db.session.merge(usuario)  # Atualiza os dados do usuário
+                db.session.commit()  # Salva as alterações no banco
                 flash("Alterações realizadas com sucesso!", "success")
+            except IntegrityError as e:
+                db.session.rollback()  # Reverte as alterações no banco em caso de erro
+                flash("Erro de integridade: dados duplicados ou conflitantes!", "danger")
+            except Exception as e:
+                db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
+                flash(f"Erro inesperado: {str(e)}", "danger")
         
-        elif not user_exists and not data_exists:
-            print("Continuar")
-            print("Trocar Usuário e Checar dados pessoais")
-            
 
-        else:
-            flash("!erro","danger")
-            # flash(f"O usuário da {user_exists.organizacao.name} chamado {user_exists.patente.abrev} {user_exists.nome_guerra} já existe.", "danger")
+        elif user_exists and user_exists != usuario:
+             flash(f"O usuário da {user_exists.organizacao.name} chamado {user_exists.patente.abrev} {user_exists.nome_guerra} já existe.", "danger")
+
+
+        elif not user_exists and not data_exists:
+            flash(f"Será substituido o Usuário Atual.", "danger")

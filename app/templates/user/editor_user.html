@@ -7,7 +7,22 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="justify-content-between hstack mx-5">
+<a href="{{ url_for('user.register') }}" class="btn btn-light mb-4 w-25 " ><i class="bi bi-arrow-left-circle"></i> Voltar</a>
+{% if current_user.id != user_atual.id %}
+  <button type="button" class="btn btn-danger mb-4 w-25" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-user-id="{{ user_atual.id }}">
+    <i class="bi bi-trash3-fill "></i> Apagar Usuário
+</button>
+
+{% else %}
+  <button class="btn btn-secondary m-1" disabled><i class="bi bi-trash3-fill"></i> Apagar Usuário</button>
+{% endif %}
+</div>
+
 <div class="row" >
+
+  <h6>Usuário: {{ user_atual }}</h6>
 
 <!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
   <div class="col-12 p-3 bg-white rounded-3 shadow">
@@ -18,7 +33,7 @@
 
     <div class="row-cols-1 row justify-content-around"> 
       <div class="col-5">
-         <h1 class="h3 mb-3 fw-normal}">Registrar Usuário</h1>
+         <h1 class="h3 mb-3 fw-normal}">Usuário</h1>
 
         <!-- Campo OM -->
         <label for="fg_organization_id" class="form-label" >Organização:</label>
@@ -40,7 +55,11 @@
         <div class="input-group mt-3 mb-1">
           <label class="input-group-text"  for="nivel">Autoridade:</label>
           {{ form.nivel(class="form-control",disabled=(current_user.nivel != 3), _name="nivel", id="nivel", placeholder="senha") }}
-      
+        </div>
+
+        <!-- Dias Disp -->
+        <div class="input-group mt-3 mb-1">
+          <label class="input-group-text"  for="dias_disp">Dias de Dispensa:</label>
           {{ form.dias_disp(class="form-control",disabled=(current_user.nivel != 3), _name="dias_disp", id="dias_disp", placeholder="dias_disp") }}
         </div>
 
@@ -77,15 +96,58 @@
           {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="21912345678") }}
         </div>
 
-        <label class="form-text"> Preencha os dados com cuidado.</label>
+        <!-- <label class="form-text"> Preencha os dados com cuidado.</label> -->
 
         <!-- submit -->
         <div class="">
-          {{ form.submit(class="btn btn-primary my-3") }}
+          {{ form.submit(class="btn btn-outline-success my-3") }}
         </div>
         </form>
       </div>
   </div>
   </div>
+</div>
+
+<!-- ================================================================================= -->
+
+<!-- Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirmação</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        Você tem certeza de que deseja deletar esse usuário?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" type="button" class="btn btn-danger">Deletar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const confirmationModal = document.getElementById('confirmationModal');
+  
+      confirmationModal.addEventListener('show.bs.modal', function (event) {
+          // Botão que acionou o modal
+          const button = event.relatedTarget;
+  
+          // Obtenha o ID do usuário do atributo data-user-id
+          const userId = button.getAttribute('data-user-id');
+  
+          // Encontre o botão "Deletar" no modal
+          const deleteButton = confirmationModal.querySelector('.btn-danger[href]');
+  
+          // Atualize o link de exclusão com o ID do usuário
+          deleteButton.setAttribute('href', `/user/delete_user/${userId}`);
+      });
+  });
+  
+  </script>
 
 {% endblock %}

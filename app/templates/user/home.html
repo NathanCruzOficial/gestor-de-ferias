@@ -17,7 +17,7 @@
                 Dias disponíveis: {{ current_user.dias_disp }} dias <br>
                 Identidade Militar : {{ current_user.military_id }}
             </p>
-            <a href="{{ url_for('user.edit', user_id= current_user.id) }}" class="btn btn-outline-light">Editar Perfil</a>
+            <a href="{{ url_for('user.profile') }}" class="btn btn-outline-light"><i class="bi bi-person-circle"></i> Editar Perfil</a>
         </div>
     </div>
 <!-- =======================================Registrar Férias=========================================== -->

@@ -117,7 +117,7 @@
           <tr>
             <th scope="col">Id Militar</th>
             <th scope="col">OM</th>
-            <th scope="col">Posto/Grad</th>
+            <th scope="col">P/G</th>
             <th scope="col">Nome</th>
             <th scope="col">Seção</th>
             <th scope="col">Email</th>
@@ -131,7 +131,7 @@
               <tr class="text-center">
               <td>{{ user.military_id }}</td>
               <td>{{ user.organizacao.abrev }}</td>
-              <td>{{ user.patente.posto }}</td>
+              <td>{{ user.patente.abrev }}</td>
               <td>{{ user.nome_guerra }}</td>
               <td>{{ user.secao.section }}</td>
               <td>{{ user.email }}</td>
@@ -146,8 +146,7 @@
                 </button>
                 
                 {% else %}
-                  <button class="btn btn-secondary" disabled><i class="bi bi-pencil-square"></i></button>
-                  <button class="btn btn-secondary m-1" disabled><i class="bi bi-trash3-fill"></i></button>
+                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary w-100" disabled><i class="bi bi-person-fill"></i></a>
                 {% endif %}
                 </div>
               </td>
@@ -171,6 +170,7 @@
       </div>
       <div class="modal-body">
         Você tem certeza de que deseja deletar esse usuário?
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

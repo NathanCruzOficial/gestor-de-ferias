@@ -138,3 +138,13 @@ class VacationForm(FlaskForm):
             delta = (self.data_fim.data - self.data_inicio.data).days
             if delta > field.data:
                 raise ValidationError("A quantidade de dias excede os disponíveis para o usuário.")
+            
+class ProfileForm(FlaskForm):
+    email = StringField("email", validators=[DataRequired(), Email()])
+    telefone = TelField("telefone",validators=[DataRequired()])
+    submit = SubmitField('Salvar')
+
+class PasswordChangeForm(FlaskForm):
+    password = PasswordField("senha", validators=[DataRequired()])
+    confirm_password = PasswordField("confirmar senha", validators=[ DataRequired()])
+    submit = SubmitField('Enviar')

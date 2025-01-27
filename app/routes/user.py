@@ -1,10 +1,10 @@
-from click import pass_obj
+from app import db
 from app.models.tables import Patente, User , Vacation
 from app.controllers import crud, db_mannager
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import logout_user, login_required, current_user
-from app.models.forms import RegisterForm, UpdateForm, VacationForm
+from app.models.forms import RegisterForm, UpdateForm, VacationForm,ProfileForm,PasswordChangeForm
 from functools import wraps
 
 
@@ -95,35 +95,67 @@ def register():
     return render_template('user/registrador.html', form=form,  users=users)
 
 @user_bp.route('/edit/<int:user_id>', methods=['GET','POST'])
+@required_level(3)
 def edit(user_id):
 
     user_atual = User.query.filter_by(id=user_id).first()  # Pegue o usuário do registro
     form = UpdateForm(obj = user_atual)
 
-    db_mannager.update_user(user_atual,form)
+    if form.validate_on_submit():
+        db_mannager.update_user(user_atual,form)
+        return redirect(url_for("user.edit", user_id=user_id))
+
+    return render_template('user/editor_user.html', user_atual=user_atual, form=form)
 
 
-        # user_novo = db_mannager.instance_user_with_form(form)
-        # if user_atual == user_novo:
-        #     print("igual")
-        # else:
-        #     print("diferente")
-        # if db_mannager.user_not_exists(form):
-        #     print("passou")
-        # else:
-        #     print("Dados já existem")
+@user_bp.route('/profile', methods=['GET','POST'])
+def profile():
+    if not current_user.nivel == 3:
+        form = ProfileForm(obj = current_user) # Pegue o registro do usuário logado
 
-    if current_user.id == user_atual.id:
-        print("case-1")
-        return render_template('user/editor_user.html', user_atual=user_atual, form=form)
-    elif current_user.id != user_atual.id and current_user.nivel == 3:
-        print("case-2")
-        return render_template('user/editor_user.html', user_atual=user_atual, form=form)
+        if form.validate_on_submit():
+            unique_fields = {
+                "email": str(form.email.data).lower(),
+                "telefone":form.telefone.data
+            }
+
+            for field, value in unique_fields.items():
+                if value:  # Verifica se o campo não está vazio ou nulo
+                    # Constrói a consulta ao banco
+                    query = User.query.filter(getattr(User, field) == value)
+                    
+                    # Se for edição, exclui o usuário atual da verificação
+                    if current_user.id:
+                        query = query.filter(User.id != current_user.id)
+                    
+                    # Verifica se já existe um conflito
+                    conflict = query.first()
+
+                    if conflict:
+                        flash(f"Erro, o {field} {value} já pertence a outro usuário.", "danger")
+                        return redirect(url_for("user.profile"))  # Retorna indicando conflito
+
+
+            print("Todos os campos estão disponíveis.")
+            current_user.email = form.email.data
+            current_user.telefone = form.telefone.data
+
+            try:
+                db.session.merge(current_user)  # Atualiza os dados do usuário
+                db.session.commit()  # Salva as alterações no banco
+                flash("Alterações realizadas com sucesso!", "success")
+            except Exception as e:
+                db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
+                flash(f"Erro inesperado: {str(e)}", "danger")
+
+
+            return redirect(url_for("user.profile"))  # Retorna indicando conflito
+        
+
+        return render_template('user/perfil.html', user_atual=current_user, form=form)
+    
     else:
-        print("case-3")
-        return redirect(url_for("user.home"))
-    
-    
+        return redirect(url_for("user.edit", user_id=current_user.id))
     
 
 @user_bp.route('/delete_user/<int:user_id>', methods=['GET','POST'])

@@ -1,0 +1,69 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block head %}
+    <link href="{{ url_for('static', filename = 'css/sign-in.css')}}" rel="stylesheet" >
+{% endblock %}
+
+{% block content %}
+
+<a href="{{ url_for('user.home') }}" class="btn btn-light mb-4 w-25 ms-4"><i class="bi bi-arrow-left-circle"></i> Voltar</a>
+
+
+<div class="row" >
+
+
+ <!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
+  <div class="col-12 p-3 bg-white rounded-3 shadow">
+    <!-- formulário -->
+    <form action="{{ url_for('user.profile') }}" method="POST">
+      {{ form.csrf_token }}
+    
+
+    <div class="row-cols-1 row justify-content-around"> 
+      <div class="col-5">
+        <h1 class="mb-3 fw-normal}"><i class="bi bi-person-circle"></i> Perfil</h1>
+        <hr>
+
+        <h6 class="" >{{ current_user.patente.abrev }} {{ current_user.nome_guerra }}</h6>
+
+        <h6 class="" >{{ current_user.organizacao.name }}</h6>
+
+        <h6 class="" >{{ current_user.military_id }}</h6>
+
+      </div>
+
+      <div class="col-5">
+      <h1 class="h3 mb-3 fw-normal">Dados Pessoais</h1>
+
+
+      <!-- nome_completo -->
+      <h6 class="" >{{ current_user.nome_completo }}</h6>
+      <!-- data_nascimento -->
+      <h6 class="" >{{ current_user.data_nascimento }}</h6>
+
+      <!-- email -->
+      <div class="input-group mb-1">
+        <label class="input-group-text" for="email">Email:</label>
+        {{ form.email(class="form-control text-lowercase", _name="email", id="email", placeholder="@email.com") }}
+      </div>
+
+      <!-- telefone -->
+      <div class="input-group mb-1">
+        <label class="input-group-text" for="telefone">Contato:</label>
+        {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="21912345678") }}
+      </div>
+
+      <label class="form-text"> Preencha os dados com cuidado.</label>
+
+      <!-- submit -->
+      <div class="">
+        {{ form.submit(class="btn btn-primary my-3") }}
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
