@@ -16,7 +16,7 @@ def login():
         username = str(form.username.data)
         username = username.upper()
 
-        user = User.query.filter_by(username=username, fg_organization_id=form.fg_organizacao_id.data).first()
+        user = User.query.filter_by(username=username, fg_organization_id=form.fg_organization_id.data).first()
         if user and user.check_password(form.password.data):  # Usando o método check_password
             login_user(user)
             return redirect(url_for('user.home'))

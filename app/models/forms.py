@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TextAreaField, TelField
+from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TextAreaField, TelField
 from wtforms.validators import DataRequired, Email, ValidationError
 from flask import flash
 from datetime import date, timedelta
@@ -77,6 +77,8 @@ class UpdateForm(FlaskForm):
     nome_completo = StringField("nome completo", validators=[DataRequired()])
     fg_organization_id = SelectField("Organização", choices=[], validators=[DataRequired()])
     fg_secao_id = SelectField("Seção", choices=[], validators=[DataRequired()])
+
+    dias_disp = IntegerField("Dias de Dispensa", default=0)
 
     data_nascimento = DateField("data de nascimento", format='%Y-%m-%d', validators=[DataRequired()], render_kw={
             'max': (date.today() - relativedelta(years=19)).strftime('%Y-%m-%d'),  # Máximo: data atual

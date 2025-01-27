@@ -74,9 +74,10 @@ def register():
     if form.validate_on_submit():
         if form.confirm_password.data == form.password.data:
             if str(form.nome_guerra.data).upper() in str(form.nome_completo.data).upper().split(" "):
-                if not db_mannager.user_not_exists(form):
-                    message,type = db_mannager.create_user(form)
-                    flash(message, type)
+                if not db_mannager.check_user_exists(form):
+                    if not db_mannager.check_unique(form):
+                        message,type = db_mannager.create_user(form)
+                        flash(message, type)
                     return redirect(url_for('user.register'))
                 else:
                     flash('Usuário Já Existe!', 'danger')
@@ -99,8 +100,8 @@ def edit(user_id):
     user_atual = User.query.filter_by(id=user_id).first()  # Pegue o usuário do registro
     form = UpdateForm(obj = user_atual)
 
-    if form.validate_on_submit():
-        db_mannager.update_user(user_atual,form)
+    db_mannager.update_user(user_atual,form)
+
 
         # user_novo = db_mannager.instance_user_with_form(form)
         # if user_atual == user_novo:

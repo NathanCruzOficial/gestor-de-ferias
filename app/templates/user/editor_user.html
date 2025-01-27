@@ -40,7 +40,9 @@
         <div class="input-group mt-3 mb-1">
           <label class="input-group-text"  for="nivel">Autoridade:</label>
           {{ form.nivel(class="form-control",disabled=(current_user.nivel != 3), _name="nivel", id="nivel", placeholder="senha") }}
-      </div>
+      
+          {{ form.dias_disp(class="form-control",disabled=(current_user.nivel != 3), _name="dias_disp", id="dias_disp", placeholder="dias_disp") }}
+        </div>
 
       <hr>
 
