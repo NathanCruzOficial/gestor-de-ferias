@@ -111,16 +111,19 @@ def update_user(usuario, form):
             usuario.fg_organization_id = form.fg_organization_id.data
             usuario.fg_patente_id = form.fg_patente_id.data
 
-            try:
-                db.session.merge(usuario)  # Atualiza os dados do usuário
-                db.session.commit()  # Salva as alterações no banco
-                flash("Alterações realizadas com sucesso!", "success")
-            except IntegrityError as e:
-                db.session.rollback()  # Reverte as alterações no banco em caso de erro
-                flash("Erro de integridade: dados duplicados ou conflitantes!", "danger")
-            except Exception as e:
-                db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
-                flash(f"Erro inesperado: {str(e)}", "danger")
+            if usuario.nome_guerra in (usuario.nome_completo).split(" "):
+                try:
+                    db.session.merge(usuario)  # Atualiza os dados do usuário
+                    db.session.commit()  # Salva as alterações no banco
+                    flash("Alterações realizadas com sucesso!", "success")
+                except IntegrityError as e:
+                    db.session.rollback()  # Reverte as alterações no banco em caso de erro
+                    flash("Erro de integridade: dados duplicados ou conflitantes!", "danger")
+                except Exception as e:
+                    db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
+                    flash(f"Erro inesperado: {str(e)}", "danger")
+            else:
+                flash(f"O nome de guerra deve pertencer ao nome completo.", "warning")
         
 
         elif user_exists and user_exists != usuario:
@@ -128,4 +131,22 @@ def update_user(usuario, form):
 
 
         elif not user_exists and not data_exists:
-            flash(f"Será substituido o Usuário Atual.", "danger")
+             # Atualiza os dados do usuário
+            usuario.username =  str(f"{patente}{form.nome_guerra.data}").upper()
+            usuario.nome_guerra = str(form.nome_guerra.data).upper()
+            usuario.fg_organization_id = form.fg_organization_id.data
+            usuario.fg_patente_id = form.fg_patente_id.data
+
+            if usuario.nome_guerra in (usuario.nome_completo).split(" "):
+                try:
+                    db.session.merge(usuario)  # Atualiza os dados do usuário
+                    db.session.commit()  # Salva as alterações no banco
+                    flash("Alterações realizadas com sucesso!", "success")
+                except IntegrityError as e:
+                    db.session.rollback()  # Reverte as alterações no banco em caso de erro
+                    flash("Erro de integridade: dados duplicados ou conflitantes!", "danger")
+                except Exception as e:
+                    db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
+                    flash(f"Erro inesperado: {str(e)}", "danger")
+            else:
+                flash(f"O nome de guerra deve pertencer ao nome completo.", "warning")
