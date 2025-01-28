@@ -150,3 +150,14 @@ def update_user(usuario, form):
                     flash(f"Erro inesperado: {str(e)}", "danger")
             else:
                 flash(f"O nome de guerra deve pertencer ao nome completo.", "warning")
+
+# ================================================= REGISTROS ===============================================================================
+
+def aprovar_registro(registro):
+    ...
+
+def reprovar_registro(registro):
+    ...
+
+def atualizar_registros():
+    ...

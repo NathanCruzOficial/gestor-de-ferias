@@ -1,5 +1,6 @@
+from sqlite3 import IntegrityError
 from app import db
-from app.models.tables import Patente, User , Vacation
+from app.models.tables import Organizacao, Patente, User , Vacation
 from app.controllers import crud, db_mannager
 
 from flask import Blueprint, render_template, redirect, url_for, flash
@@ -37,34 +38,56 @@ def require_login():
 def home():
     my_vacations = Vacation.query.filter_by(fg_users_id=current_user.id).order_by(Vacation.id.desc()).all()
     form = VacationForm()
+   
     if form.validate_on_submit():
-        if current_user.dias_disp == 0:
-            fg_users_id = current_user.id
-            data_inicio = form.data_inicio.data
-            data_fim = form.data_fim.data
-            destino = form.destino.data
-            motivo = form.motivo.data
-            fg_states_id = 1
+        dias = (form.data_fim.data - form.data_inicio.data).days
+        if current_user.dias_disp > dias:
+            if current_user.dias_disp > 0:
+                fg_users_id = current_user.id
+                data_inicio = form.data_inicio.data
+                data_fim = form.data_fim.data
+                destino = form.destino.data
+                motivo = form.motivo.data
+                fg_states_id = 1
 
-            registro_ferias = Vacation( fg_users_id, fg_states_id, data_inicio, data_fim, destino, motivo)
-            
-            crud.create(registro_ferias)
-            return redirect(url_for("user.home"))
+                current_user.dias_disp = current_user.dias_disp - dias
+
+                registro_ferias = Vacation( fg_users_id, fg_states_id, data_inicio, data_fim, destino, motivo)
+                print(registro_ferias)
+                
+                try:
+                    crud.create(registro_ferias)
+                    db.session.merge(current_user)
+                    db.session.commit()                    
+                except IntegrityError:
+                    db.session.rollback()
+                    flash('Erro de Integridade, tente novamente.', 'danger')
+
+
+                flash('Registro de férias efetuado com sucesso', 'success')
+                return redirect(url_for("user.home"))
+            else:
+                flash(f'Seus dias de dispensa acabaram! você tem: {current_user.dias_disp} dias disponíveis', 'danger')
         else:
-            flash(f'Seus dias de dispensa acabaram! você tem: {current_user.dias_disp} dias disponíveis', 'danger')
+            flash(f'Atenção! você tem somente: {current_user.dias_disp} dias disponíveis', 'warning')
 
     return render_template("user/home.html", form=form, ferias=my_vacations)
 
 @user_bp.route('/ferias')
 @required_level(2)
 def ferias():
-    vacations = Vacation.query.join(User).all()
+    vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
     return render_template("user/ferias.html", registros = vacations)
 
 @user_bp.route('/imprimir')
 @required_level(2)
 def imprimir():
-    return render_template("user/imprimir.html")
+    if current_user.nivel == 3:
+        vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
+    else:
+        vacations = Vacation.query.filter_by(fg_organization_id=current_user.organizacao.id).join(User).order_by(Vacation.id.desc()).all()
+
+    return render_template("user/imprimir.html", vacations=vacations)
 
 @user_bp.route('/register', methods=['GET', 'POST'])
 @required_level(3)
@@ -106,7 +129,6 @@ def edit(user_id):
         return redirect(url_for("user.edit", user_id=user_id))
 
     return render_template('user/editor_user.html', user_atual=user_atual, form=form)
-
 
 @user_bp.route('/profile', methods=['GET','POST'])
 def profile():
@@ -156,7 +178,7 @@ def profile():
     
     else:
         return redirect(url_for("user.edit", user_id=current_user.id))
-    
+
 
 @user_bp.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @required_level(3)
@@ -169,7 +191,35 @@ def delete_user(user_id):
     crud.delete_user(user_id)
     return redirect(url_for('user.register'))  # Redireciona de volta para a lista de usuários
 
+@user_bp.route('ferias/reprove/<int:registro_id>', methods=['GET','POST'])
+@required_level(3)
+def reprove_regs(registro_id):
+    registro = Vacation.query.get(registro_id)
+    if registro and registro.fg_states_id == 1:
+        registro.fg_states_id = 3
+        registro.user.dias_disp = registro.user.dias_disp + registro.dias
 
+        db.session.merge(registro)
+        db.session.commit()
+        return redirect(url_for('user.ferias'))
+
+    else:
+        flash("Registro não existe", "danger")
+        return redirect(url_for('user.ferias'))
+    
+@user_bp.route('ferias/aprove/<int:registro_id>', methods=['GET','POST'])
+@required_level(3)
+def aprove_regs(registro_id):
+    registro = Vacation.query.get(registro_id)
+    if registro and registro.fg_states_id == 1:
+        registro.fg_states_id = 2
+        db.session.merge(registro)
+        db.session.commit()
+        return redirect(url_for('user.ferias'))
+
+    else:
+        flash(f"Registro não existe", "danger")
+        return redirect(url_for('user.ferias'))
 
 @user_bp.route('/config')
 @required_level(3)

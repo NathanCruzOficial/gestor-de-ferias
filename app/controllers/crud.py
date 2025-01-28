@@ -16,6 +16,10 @@ def delete_user(user):
             db.session.delete(user_to_delete)
             db.session.commit()
 
+def delete_registro(registro):
+        db.session.delete(user_to_delete)
+        db.session.commit()
+
 def create_admin():
     count = User.query.count()
     if count == 0:  # Tabela vazia

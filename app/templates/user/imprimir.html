@@ -7,5 +7,47 @@
 <h1>Página de Impressão</h1>
 <p>aqui você irá imprimir a relação</p>
 
+<table class="table table-sm table-striped table-hover table-bordered align-middle">
+    <thead class="table-dark text-center sticky-top">
+      <tr>
+        <th scope="col">Status</th>
+        <th scope="col">Data Inicio</th>
+        <th scope="col">Data Fim</th>
+        <th scope="col">OM</th>
+        <th scope="col">P/G</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Seção</th>
+        <th scope="col">Email</th>
+        <th scope="col">Contato</th>
+      </tr>
+    </thead>
+    <tbody id="userTable">
+      {% for ferias in vacations %}
+          <tr class="text-center">
+          {% if ferias.state.id == 1 %}
+          <td class="bg-secondary">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 2 %}
+          <td class="bg-primary">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 3 %}
+          <td class="bg-danger">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 4 %}
+          <td class="bg-success">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 5 %}
+          <td class="bg-warning">Em {{ ferias.state.desc }}</td>
+          {% endif %}
+          <td>{{ ferias.data_inicio }}</td>
+          <td>{{ ferias.data_fim }}</td>
+          <td>{{ ferias.user.organizacao.name }}</td>
+          <td>{{ ferias.user.patente.abrev }}</td>
+          <td>{{ ferias.user.nome_guerra }}</td>
+          <td>{{ ferias.user.secao.section }}</td>
+          <td>{{ ferias.user.email }}</td>
+          <td>{{ ferias.user.telefone }}</td>
+          
+        </tr>  
+  {% endfor %}
+    </tbody>
+  </table>
+
 
 {% endblock %}

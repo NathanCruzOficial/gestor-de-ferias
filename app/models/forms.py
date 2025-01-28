@@ -108,26 +108,27 @@ class VacationForm(FlaskForm):
 
     data_inicio = DateField(
         "Data de Início",
-        format='%d-%m-%Y',
+        format='%Y-%m-%d',
         validators=[DataRequired()],
         render_kw={
-            'min': (date.today() + timedelta(days=1)).strftime('%d-%m-%Y'),
-            'max': date(date.today().year, 12, 31).strftime('%d-%m-%Y')
+            'min': (date.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+            'max': date(date.today().year, 12, 31).strftime('%Y-%m-%d')
         }
     )
     data_fim = DateField(
     "Data de Fim",
-    format='%d-%m-%Y',
+    format='%Y-%m-%d',
     validators=[DataRequired()],
     render_kw={
-        'min': (date.today() + timedelta(days=2)).strftime('%d-%m-%Y'),  # Garantir que a data de fim seja pelo menos 1 dia após a de início
-        'max': date(date.today().year, 12, 31).strftime('%d-%m-%Y')  # Máximo: 31 de dezembro de 2025
+        'min': (date.today() + timedelta(days=2)).strftime('%Y-%m-%d'),  # Garantir que a data de fim seja pelo menos 1 dia após a de início
+        'max': date(date.today().year, 12, 31).strftime('%Y-%m-%d')  # Máximo: 31 de dezembro de 2025
     }
 )
     
     destino = StringField("destino", validators=[DataRequired()])
     motivo = TextAreaField("Motivo")
     detalhes = StringField("detalhes")
+    submit = SubmitField('Salvar')
 
     def validate_data_fim(self, field):
         if self.data_inicio.data and field.data < self.data_inicio.data:

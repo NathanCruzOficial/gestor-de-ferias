@@ -43,8 +43,10 @@
           {% endif %}
           <td>
             <div class="hstak">
-              <button href="#" class="btn btn-success" >Aprovar</button>
-              <button href="#" class="btn btn-danger">Reprovar</button>
+              {% if ferias.state.id == 1 %}
+              <a href="{{ url_for('user.aprove_regs',registro_id=ferias.id) }}" class="btn btn-success" ><i class="bi bi-hand-thumbs-up-fill"></i> Aprovar</a>
+              <a href="{{ url_for('user.reprove_regs',registro_id=ferias.id) }}" class="btn btn-danger"><i class="bi bi-hand-thumbs-down-fill"></i> Reprovar</a>
+              {% endif %}
             </div>
           </td>
         </tr>          

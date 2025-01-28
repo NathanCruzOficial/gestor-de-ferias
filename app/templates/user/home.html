@@ -47,7 +47,11 @@
                 <div class="mb-3">
                     <span class="form-label text-danger" id="dias"></span> <!-- Aqui vai aparecer o número de dias -->
                 </div>
-                <button type="submit" class="btn btn-outline-success px-5">Registrar</button>
+                <!-- submit -->
+                <div class="">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+                
                 {% else %}
                 <div class="text-center">
                     <h1 class="h3 p-2 text-bg-warning text-white"> <strong>Aviso:</strong></h1>
