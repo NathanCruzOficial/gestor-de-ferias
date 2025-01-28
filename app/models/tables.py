@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from app import db, lm
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -79,6 +79,7 @@ class Vacation(db.Model):
     data_inicio = db.Column(db.Date, nullable=False)
     data_fim = db.Column(db.Date, nullable=False)
     data_registro = db.Column(db.Date, nullable=False)
+    data_retorno = db.Column(db.Date, nullable=False)
     destino = db.Column(db.String(30), nullable=False)
     motivo = db.Column(db.String(255))
     dias = db.Column(db.Integer, nullable=False)
@@ -99,8 +100,10 @@ class Vacation(db.Model):
    
         self.data_inicio = data_inicio
         self.data_fim = data_fim
-        self.data_registro = datetime.datetime.today()
+        self.data_registro = datetime.today()
+        self.data_retorno = data_fim + timedelta(days=1)
         self.destino = destino
+
         self.motivo = motivo
 
         # Verificando se as datas são válidas antes de calcular os dias

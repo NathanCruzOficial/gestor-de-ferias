@@ -39,7 +39,9 @@
           {% elif ferias.state.id == 4 %}
           <td class="bg-success">{{ ferias.state.desc }}</td>
           {% elif ferias.state.id == 5 %}
-          <td class="bg-warning">Em {{ ferias.state.desc }}</td>
+          <td class="bg-warning">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 6 %}
+          <td class="bg-secondary">{{ ferias.state.desc }}</td>
           {% endif %}
           <td>
             <div class="hstak">

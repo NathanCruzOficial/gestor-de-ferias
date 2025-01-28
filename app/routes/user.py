@@ -41,7 +41,7 @@ def home():
    
     if form.validate_on_submit():
         dias = (form.data_fim.data - form.data_inicio.data).days
-        if current_user.dias_disp > dias:
+        if current_user.dias_disp >= dias:
             if current_user.dias_disp > 0:
                 fg_users_id = current_user.id
                 data_inicio = form.data_inicio.data
@@ -82,6 +82,7 @@ def ferias():
 @user_bp.route('/imprimir')
 @required_level(2)
 def imprimir():
+    db_mannager.atualizar_registros()
     if current_user.nivel == 3:
         vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
     else:

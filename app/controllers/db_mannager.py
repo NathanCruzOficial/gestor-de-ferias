@@ -1,4 +1,4 @@
-from colorama import reinit
+from datetime import datetime
 from app import app,db
 from app.models.tables import User, Vacation, Patente, Secao
 from app.controllers import crud
@@ -123,7 +123,7 @@ def update_user(usuario, form):
                     db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
                     flash(f"Erro inesperado: {str(e)}", "danger")
             else:
-                flash(f"O nome de guerra deve pertencer ao nome completo.", "warning")
+                flash("O nome de guerra deve pertencer ao nome completo.", "warning")
         
 
         elif user_exists and user_exists != usuario:
@@ -149,15 +149,46 @@ def update_user(usuario, form):
                     db.session.rollback()  # Garante que nenhuma alteração parcial seja mantida
                     flash(f"Erro inesperado: {str(e)}", "danger")
             else:
-                flash(f"O nome de guerra deve pertencer ao nome completo.", "warning")
+                flash("O nome de guerra deve pertencer ao nome completo.", "warning")
 
 # ================================================= REGISTROS ===============================================================================
 
-def aprovar_registro(registro):
-    ...
-
-def reprovar_registro(registro):
-    ...
-
 def atualizar_registros():
-    ...
+    registros = Vacation.query.all()
+    
+    hoje_str = "2025-02-17"
+    hoje = datetime.strptime(hoje_str, "%Y-%m-%d").date()
+
+    today = datetime.today().date()  # Converte para datetime.date
+    print(hoje)
+
+
+    if not registros:
+        return  # Retorna sem fazer nada se não houver registros
+
+    for registro in registros:
+
+        # print("Verificando registro", type(today), " com as datas",type(registro.data_fim)," ", type(registro.data_inicio) )
+
+        if hoje >= registro.data_fim:
+            if registro.fg_states_id == 5:  # Em Andamento → Finalizado
+                registro.fg_states_id = 6
+                db.session.merge(registro)
+
+            elif registro.fg_states_id == 4:  # Expirado → Excluir
+                db.session.delete(registro)
+
+        elif hoje >= registro.data_inicio:
+            if registro.fg_states_id == 2:  # Aprovado → Em andamento
+                registro.fg_states_id = 5
+                db.session.merge(registro)
+
+            elif registro.fg_states_id == 1:  # Em Análise → Expirado
+                registro.fg_states_id = 4
+                db.session.merge(registro)
+
+            elif registro.fg_states_id == 3:  # Reprovado → Em andamento
+                db.session.delete(registro)
+
+    
+    db.session.commit()  # Realiza um único commit ao final para eficiência

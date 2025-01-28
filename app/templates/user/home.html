@@ -97,7 +97,9 @@
                                 {% elif f.state.id == 4 %}
                                 <td class="bg-success">{{ f.state.desc }}</td>
                                 {% elif f.state.id == 5 %}
-                                <td class="bg-warning">Em {{ f.state.desc }}</td>
+                                <td class="bg-warning">{{ f.state.desc }}</td>
+                                {% elif f.state.id == 6 %}
+                                <td class="bg-secondary">{{ f.state.desc }}</td>
                                 {% endif %}
                         </tr>
                         {% endfor %}

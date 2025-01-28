@@ -12,7 +12,7 @@
       <tr>
         <th scope="col">Status</th>
         <th scope="col">Data Inicio</th>
-        <th scope="col">Data Fim</th>
+        <th scope="col">Retorno</th>
         <th scope="col">OM</th>
         <th scope="col">P/G</th>
         <th scope="col">Nome</th>
@@ -33,10 +33,12 @@
           {% elif ferias.state.id == 4 %}
           <td class="bg-success">{{ ferias.state.desc }}</td>
           {% elif ferias.state.id == 5 %}
-          <td class="bg-warning">Em {{ ferias.state.desc }}</td>
+          <td class="bg-warning">{{ ferias.state.desc }}</td>
+          {% elif ferias.state.id == 6 %}
+          <td class="bg-secondary">{{ ferias.state.desc }}</td>
           {% endif %}
           <td>{{ ferias.data_inicio }}</td>
-          <td>{{ ferias.data_fim }}</td>
+          <td>{{ ferias.data_retorno }}</td>
           <td>{{ ferias.user.organizacao.name }}</td>
           <td>{{ ferias.user.patente.abrev }}</td>
           <td>{{ ferias.user.nome_guerra }}</td>
