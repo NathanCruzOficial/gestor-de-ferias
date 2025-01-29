@@ -106,8 +106,8 @@
 
   <!-- Barra de Pesquisa -->
   <div class="mb-3 input-group">
-    <label class="input-group-text" for="searchInput"><i class="bi bi-search"></i></label>
-    <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por nome, email, posto ou nível...">
+    <label class="input-group-text" for="searchInput"><i class="bi bi-search"> Pesquisa</i></label>
+    <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por nome, email, posto, seção ou organizacao...">
   </div>
 
   <div class="bg-white rounded-3 p-3">
@@ -140,13 +140,13 @@
               <td>
                 <div class="hstak">
                 {% if current_user.id != user.id %}
-                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary" ><i class="bi bi-pencil-square"></i></a>
+                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary" ><i class="bi bi-pencil-square" aria-hidden="true"> edit</i></a>
                   <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-user-id="{{ user.id }}">
-                    <i class="bi bi-trash3-fill"></i>
+                    <i class="bi bi-trash3-fill" aria-hidden="true"> del</i>
                 </button>
                 
                 {% else %}
-                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary w-100" disabled><i class="bi bi-person-fill"></i></a>
+                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary w-100" disabled><i class="bi bi-person-fill"> perfil</i></a>
                 {% endif %}
                 </div>
               </td>

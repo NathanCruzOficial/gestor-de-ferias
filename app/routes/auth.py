@@ -17,11 +17,15 @@ def login():
         username = username.upper()
 
         user = User.query.filter_by(username=username, fg_organization_id=form.fg_organization_id.data).first()
-        if user and user.check_password(form.password.data):  # Usando o método check_password
-            login_user(user)
-            return redirect(url_for('user.home'))
+        if user:
+            if user and user.check_password(form.password.data):  # Usando o método check_password
+                login_user(user)
+                return redirect(url_for('user.home'))
+            else:
+                flash("Senha incorreta.","danger")
+                return redirect(url_for('auth.login'))
         else:
-            flash("Usuário ou senha inválidos.","warning")
+            flash("Usuário não existe.","danger")
             return redirect(url_for('auth.login'))
 
     return render_template('auth/login.html', form=form)

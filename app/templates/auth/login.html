@@ -12,33 +12,36 @@
       <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
 
       <!-- organzacão -->
-      {{ form.fg_organization_id(class="form-control", _name="fg_organization_id", id="fg_organization_id", placeholder="OM") }}
+      {{ form.fg_organization_id(class="form-control mb-1", _name="fg_organization_id", id="fg_organization_id", placeholder="OM") }}
 
       <!-- username -->
       <div class="form-floating">
         {{ form.username(class="form-control text-uppercase", _name="username", id="username", placeholder="Usuário") }}
         <label for="username">Usuário</label>
-
+      </div>
 
       <!-- password -->
       <div class="form-floating">
         {{ form.password(class="form-control", _name="password", id="floatingPassword", placeholder="Senha") }}
         <label for="password">Senha</label>
+      </div>
 
       <!-- remember-me -->
-      <div class="form-check text-start my-3">
-        <label class="form-check-label" for="flexCheckDefault">
-          {{ form.remember_me(class="form-check-input",id="flexCheckDefault", type="checkbox") }} Remember me
-        </label>
+      <div class="form-check mb-5 mt-4 justify-content-between hstack">
+        <div>
+        {{ form.remember_me(class="form-check-input",id="flexCheckDefault", type="checkbox") }}
+        <label class="form-check-label" for="flexCheckDefault">Lembre-se de mim</label>
+        </div>
+
+        <a href="#" class=" btn btn-sm btn-outline-secondary ">Esqueceu sua senha? </a>
       </div>
 
-      <div>
-      <label class="form-label text-danger">Sistema em Desenvolvimento.</label>
-      </div>
+
       <!-- submit -->
-      </div class="form-floating">
-        <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
+      <div class="d-flex justify-content-center mb-4">
+        <button type="submit" class="btn btn-primary btn-lg w-md-50 w-75">Entrar</button>
       </div>
+      
         
     </form>
 
