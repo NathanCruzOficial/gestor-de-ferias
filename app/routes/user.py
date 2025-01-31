@@ -1,11 +1,13 @@
+import datetime
 from sqlite3 import IntegrityError
 from app import db
-from app.models.tables import Organizacao, Patente, User , Vacation
+from app.models.tables import Organizacao, Patente, Secao, User , Vacation , State
 from app.controllers import crud, db_mannager
 
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, send_file, request
 from flask_login import logout_user, login_required, current_user
 from app.models.forms import RegisterForm, UpdateForm, VacationForm,ProfileForm,PasswordChangeForm
+from app.controllers import doc_create
 from functools import wraps
 
 
@@ -79,16 +81,124 @@ def ferias():
     vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
     return render_template("user/ferias.html", registros = vacations)
 
+# ------------------------------------------------------- IMPRIMIR ---------------------------------------------------------------------
+@user_bp.route('/imprimir/archive')
+@required_level(2)
+def gerar_relatorio():
+    # Pegar filtros da URL
+    status = request.args.get("status")
+    data_inicio = request.args.get("data_inicio")
+    data_fim = request.args.get("data_fim")
+    search = request.args.get("search")
+
+    # Construir a query com filtros
+    query = Vacation.query
+
+    if status:
+        query = query.join(State).filter(State.id == status)
+    else:
+        status = 0
+
+    if data_inicio:
+        query = query.filter(Vacation.data_inicio >= data_inicio)
+
+    if data_fim:
+        query = query.filter(Vacation.data_fim <= data_fim)
+
+        
+
+    # Buscar os dados filtrados
+    vacations = query.join(User).order_by(Vacation.id.desc()).all()
+
+    status_ferias = {
+    0: "TODOS",
+    1: "EM ANÁLISE",
+    2: "APROVADO",
+    3: "REPROVADO",
+    4: "EXPIRADO",
+    5: "EM ANDAMENTO",
+    6: "FINALIZADO"
+    }
+
+    status = int(status)
+    # Garantir que o status_id seja do tipo inteiro
+    status_descricao = status_ferias.get(status, "TODOS")
+
+    niveis = {
+    1: "Usuário (Não Autorizado!)",
+    2: "Fiscal",
+    3: "Administrador"
+    }
+
+    nivel = niveis.get(current_user.nivel, "Status desconhecido")
+
+
+      # Filtros
+    filtros = {
+        "STATUS": status_descricao,
+        "DATA_INI": data_inicio,
+        "DATA_FIM": data_fim,
+    }
+
+    # Dados fixos
+    emissor = {
+        "NOME": current_user.nome_completo,
+        "DATA": str(datetime.datetime.today().strftime("%d/%m/%Y")),
+        "ORGANIZACAO": current_user.organizacao.name,
+        "NOME_COMPLETO": current_user.nome_completo,
+        "NOME_GUERRA": current_user.nome_guerra,
+        "PATENTE": current_user.patente.posto,
+        "AUTORIDADE": nivel
+    }
+
+    dados = filtros | emissor
+
+    # Criar lista de dados para preencher a tabela do Word
+    tabela_dados = [{"state": str(v.state.desc),
+                     "om": str(v.user.organizacao.name),
+                     "nome": str(v.user.nome_guerra),
+                     "p/g": str(v.user.patente.abrev),
+                     "data_inicio": v.data_inicio.strftime("%d/%m/%Y"),
+                     "data_retorno": v.data_retorno.strftime("%d/%m/%Y"),
+                     "contato": f"{v.user.telefone} {v.user.email}",
+                     "dias": v.dias} for v in vacations]
+
+    # Criar documento Word filtrado
+    output_path = doc_create.preencher_docx(dados, tabela_dados)
+
+    # Retornar o arquivo gerado como download
+    return send_file(output_path, as_attachment=True, download_name="relatorio.docx", mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+
+
 @user_bp.route('/imprimir')
 @required_level(2)
 def imprimir():
-    db_mannager.atualizar_registros()
-    if current_user.nivel == 3:
-        vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
-    else:
-        vacations = Vacation.query.filter_by(fg_organization_id=current_user.organizacao.id).join(User).order_by(Vacation.id.desc()).all()
+    # Pegar os filtros do request
+    status = request.args.get("status")
+    data_inicio = request.args.get("data_inicio")
+    data_fim = request.args.get("data_fim")
+    search = request.args.get("search")
+
+    # Construir a query com filtros dinâmicos
+    query = Vacation.query
+
+    if status:
+        query = query.join(State).filter(State.id == status)
+    if data_inicio:
+        query = query.filter(Vacation.data_inicio >= data_inicio)
+
+    if data_fim:
+        query = query.filter(Vacation.data_fim <= data_fim)
+
+
+    # Buscar os resultados filtrados
+    vacations = query.join(User).order_by(Vacation.id.desc()).all()
 
     return render_template("user/imprimir.html", vacations=vacations)
+
+
+# ----------------------------------------------------------------------------------------------------------------------------
+
 
 @user_bp.route('/register', methods=['GET', 'POST'])
 @required_level(3)

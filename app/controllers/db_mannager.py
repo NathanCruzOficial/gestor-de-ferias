@@ -156,10 +156,10 @@ def update_user(usuario, form):
 def atualizar_registros():
     registros = Vacation.query.all()
     
-    hoje_str = "2025-02-17"
-    hoje = datetime.strptime(hoje_str, "%Y-%m-%d").date()
+    # hoje_str = "2025-02-17"
+    # hoje = datetime.strptime(hoje_str, "%Y-%m-%d").date()
 
-    today = datetime.today().date()  # Converte para datetime.date
+    hoje = datetime.today().date()  # Converte para datetime.date
     print(hoje)
 
 

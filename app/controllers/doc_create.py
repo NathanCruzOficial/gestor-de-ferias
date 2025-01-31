@@ -1,10 +1,19 @@
-from flask import Flask, send_file
 from docx import Document
+import os
 
-app = Flask(__name__)
+def preencher_docx(dados, tabela_dados):
+    modelo_path = os.path.abspath("app/models/docs/doc-fry-model.docx")
+    output_dir = os.path.abspath("documentos_gerados")
+    output_path = os.path.join(output_dir, "relatorio_preenchido.docx")
 
-def preencher_docx(modelo_path, dados, tabela_dados, output_path):
-    """Preenche um documento Word com dados e adiciona linhas dinamicamente em uma tabela."""
+    # Criar diretório se não existir
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Verificar se o arquivo modelo existe
+    if not os.path.exists(modelo_path):
+        raise FileNotFoundError(f"Arquivo modelo não encontrado: {modelo_path}")
+
+    # Carregar o documento modelo
     doc = Document(modelo_path)
 
     # Substituir placeholders nos parágrafos
@@ -13,40 +22,52 @@ def preencher_docx(modelo_path, dados, tabela_dados, output_path):
             if f"{{{{{chave}}}}}" in paragrafo.text:
                 paragrafo.text = paragrafo.text.replace(f"{{{{{chave}}}}}", valor)
 
-    # Encontrar a tabela e preencher com os dados dinâmicos
+    # Substituir placeholders no rodapé
+    for section in doc.sections:
+        footer = section.footer
+        for paragrafo in footer.paragraphs:
+            for chave, valor in dados.items():
+                if f"{{{{{chave}}}}}" in paragrafo.text:
+                    paragrafo.text = paragrafo.text.replace(f"{{{{{chave}}}}}", valor)
+
+    # Substituir placeholders no rodapé
+    for section in doc.sections:
+        header = section.header
+        for paragrafo in header.paragraphs:
+            for chave, valor in dados.items():
+                if f"{{{{{chave}}}}}" in paragrafo.text:
+                    paragrafo.text = paragrafo.text.replace(f"{{{{{chave}}}}}", valor)
+
+      # Preencher a tabela com os dados
     for tabela in doc.tables:
-        if len(tabela.rows) == 1:  # Garante que a tabela tenha apenas o cabeçalho inicialmente
+        if len(tabela.rows) > 0:  # Garante que a tabela tenha pelo menos um cabeçalho
+            cabecalho = tabela.rows[0].cells  # Assume que a primeira linha é o cabeçalho
+            
+            # Verificar o número de colunas na tabela
+            num_colunas = len(cabecalho)
+            
+            # Adiciona cada linha de dados verificando o número de colunas
             for item in tabela_dados:
                 linha = tabela.add_row().cells
-                linha[0].text = item["codigo"]
-                linha[1].text = item["descricao"]
-                linha[2].text = str(item["quantidade"])
+                valores = [
+                    item.get("state", ""), 
+                    item.get("om", ""), 
+                    item.get("p/g", ""),  
+                    item.get("nome", ""),
+                    item.get("data_inicio", ""), 
+                    str(item.get("dias", "")),
+                    item.get("data_retorno", ""),
+                    item.get("contato", "")]
 
+                for i in range(min(len(valores), num_colunas)):  # Garante que não acesse colunas inexistentes
+                    linha[i].text = valores[i]
+
+    # Salvar o arquivo
     doc.save(output_path)
 
-@app.route('/gerar-relatorio')
-def gerar_relatorio():
-    modelo_path = "modelos/modelo.docx"
-    output_path = "documentos_gerados/relatorio_preenchido.docx"
+    # Verificar se o arquivo foi criado corretamente
+    if not os.path.exists(output_path):
+        raise FileNotFoundError(f"Erro ao criar o arquivo: {output_path}")
 
-    # Dados fixos
-    dados = {
-        "NOME": "João Silva",
-        "DATA": "29/01/2025"
-    }
-
-    # Dados dinâmicos da tabela
-    tabela_dados = [
-        {"codigo": "A001", "descricao": "Produto X", "quantidade": 10},
-        {"codigo": "A002", "descricao": "Produto Y", "quantidade": 5},
-        {"codigo": "A003", "descricao": "Produto Z", "quantidade": 8},
-        {"codigo": "A004", "descricao": "Produto W", "quantidade": 15},  # Adicione quantas linhas quiser
-    ]
-
-    # Gerar documento
-    preencher_docx(modelo_path, dados, tabela_dados, output_path)
-
-    return send_file(output_path, as_attachment=True)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    # Retornar o arquivo como download
+    return output_path
