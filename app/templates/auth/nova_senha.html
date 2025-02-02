@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h2>Nova Senha</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <label>{{ form.nova_senha.label }}</label>
+    {{ form.nova_senha(class="form-control") }}
+    <br>
+    <label>{{ form.confirmar_senha.label }}</label>
+    {{ form.confirmar_senha(class="form-control") }}
+    <br>
+    {{ form.submit(class="btn btn-success") }}
+</form>
+{% endblock %}

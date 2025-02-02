@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h2>Digite o Código</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <label>{{ form.codigo.label }}</label>
+    {{ form.codigo(class="form-control") }}
+    <br>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}

@@ -1,14 +1,14 @@
 from app.models.tables import Organizacao, User
 from flask import Blueprint, render_template, redirect, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, current_user
 from app.models.forms import LoginForm
-
 from app.models.seed import seed_data
-
+from .middlewares import redirect_if_authenticated
 
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/', methods=['GET', 'POST'])
+@redirect_if_authenticated  # Impede o acesso se o usuário já estiver logado
 def login():
     # seed_data()
     form = LoginForm()

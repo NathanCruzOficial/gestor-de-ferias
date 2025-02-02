@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TextAreaField, TelField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.validators import DataRequired, Email, ValidationError, EqualTo
 from flask import flash
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
@@ -146,6 +146,24 @@ class ProfileForm(FlaskForm):
     submit = SubmitField('Salvar')
 
 class PasswordChangeForm(FlaskForm):
-    password = PasswordField("senha", validators=[DataRequired()])
-    confirm_password = PasswordField("confirmar senha", validators=[ DataRequired()])
+    senha_atual = PasswordField("Senha Atual", validators=[DataRequired()])
+    nova_senha = PasswordField("Nova Senha", validators=[DataRequired()])
+    confirmar_senha = PasswordField("Confirme a Nova Senha", validators=[DataRequired(), EqualTo('nova_senha')])
     submit = SubmitField('Enviar')
+
+# Formulário para solicitar código de recuperação
+class ResetPasswordForm(FlaskForm):
+    email = StringField("E-mail", validators=[DataRequired(), Email()])
+    submit = SubmitField("Enviar Código")
+
+# Formulário para validar código
+class VerifyCodeForm(FlaskForm):
+    codigo = StringField("Código de Verificação", validators=[DataRequired()])
+    submit = SubmitField("Validar Código")
+
+# Formulário para redefinir a senha
+class NewPasswordForm(FlaskForm):
+    nova_senha = PasswordField("Nova Senha", validators=[DataRequired()])
+    confirmar_senha = PasswordField("Confirme a Nova Senha", validators=[DataRequired(), EqualTo('nova_senha')])
+    submit = SubmitField("Alterar Senha")
+

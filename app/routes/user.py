@@ -5,27 +5,12 @@ from app.models.tables import Organizacao, Patente, Secao, User , Vacation , Sta
 from app.controllers import crud, db_mannager
 
 from flask import Blueprint, render_template, redirect, url_for, flash, send_file, request
-from flask_login import logout_user, login_required, current_user
+from flask_login import logout_user, current_user, login_required
 from app.models.forms import RegisterForm, UpdateForm, VacationForm,ProfileForm,PasswordChangeForm
 from app.controllers import doc_create
-from functools import wraps
+from .middlewares import required_level
 
-
-# Isntânciando o Blueprint
 user_bp = Blueprint('user', __name__)
-
-# Decorador - Limitador de nivel
-def required_level(level_required):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            if not current_user.is_authenticated:
-                return redirect(url_for('auth.login'))
-            if int(current_user.nivel) < level_required:
-                return redirect(url_for('user.home'))  # Redireciona para uma página segura
-            return func(*args, **kwargs)
-        return wrapper
-    return decorator
 
 # Middleware para proteger todas as rotas
 @user_bp.before_request
@@ -33,7 +18,7 @@ def required_level(level_required):
 def require_login():
     """Middleware para exigir login em todas as rotas da Blueprint."""
     pass
-
+# Isntânciando o Blueprint
 
 # Página principal
 @user_bp.route('/', methods=['GET', 'POST'])
@@ -89,7 +74,7 @@ def gerar_relatorio():
     status = request.args.get("status")
     data_inicio = request.args.get("data_inicio")
     data_fim = request.args.get("data_fim")
-    search = request.args.get("search")
+    # search = request.args.get("search")
 
     # Construir a query com filtros
     query = Vacation.query
