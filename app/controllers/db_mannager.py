@@ -5,6 +5,10 @@ from app.controllers import crud
 from sqlalchemy.exc import IntegrityError
 from flask import flash
 
+def db_update(user):
+    db.session.merge(user)
+    db.session.commit()
+
 def create_user(form):
     
     with app.app_context():  # Garante que você está no contexto da aplicação

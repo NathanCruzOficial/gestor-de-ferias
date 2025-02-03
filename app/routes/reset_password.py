@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from app.controllers import db_mannager
 from app.models.tables import User
 from app.models.forms import ResetPasswordForm, VerifyCodeForm, NewPasswordForm
 import random
@@ -93,6 +94,7 @@ def nova_senha():
 
         if user:
             user.set_password(form.nova_senha.data)  # Define a nova senha
+            db_mannager.db_update(user)
             flash("Senha alterada com sucesso! Faça login.", "success")
             return redirect(url_for('auth.login'))
         else:
