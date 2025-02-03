@@ -17,18 +17,18 @@
     {% endblock %}
     
 </head>
-    <body class="container-fluid m-0 p-0">
+    <body class="d-flex flex-column min-vh-100">
 
-        {% include "shared/header.html" %}
-        
-        {% include "shared/flashes.html" %}
+            {% include "shared/header.html" %}
+            
+            {% include "shared/flashes.html" %}
 
-        
-        <div class="bg-body-secondary p-4 mt-0">
-        {% block content %}{% endblock %}
-        </div>
-        
-        {% include "shared/footer.html" %}
+            
+            <div class="bg-body-secondary flex-grow-1 p-5">
+            {% block content %}{% endblock %}
+            </div>
+            
+            {% include "shared/footer.html" %}
 
     </body>
 </html>

@@ -25,12 +25,14 @@ def recuperar_senha():
             session['codigo_recuperacao'] = codigo
             session['email_recuperacao'] = email
 
+            print(codigo)
+
             # define an empty dict to populate with mail values
             mail_body = {}
 
             mail_from = {
-                "name": "Sys",
-                "email": "r83ql3p2dmvgzw1j",
+                "name": "no-reply",
+                "email": "MS_2g1ZZ4@trial-0p7kx4xz5p2g9yjr.mlsender.net",
             }
 
             recipients = [

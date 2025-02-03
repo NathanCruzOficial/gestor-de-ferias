@@ -1,11 +1,17 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
-<h2>Recuperar Senha</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <label>{{ form.email.label }}</label>
-    {{ form.email(class="form-control") }}
-    <br>
-    {{ form.submit(class="btn btn-primary") }}
-</form>
+<div class="row h-100">
+    <div class="col-4 mx-auto bg-white rounded-2 shadow p-4 my-auto">
+        <h2>Recuperar Senha</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <label>{{ form.email.label }}</label>
+            {{ form.email(class="form-control", placeholder="Insira seu email") }}
+            <br>
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-secondary" >Voltar</a>
+        </form>
+    </div>
+
+</div>
 {% endblock %}
