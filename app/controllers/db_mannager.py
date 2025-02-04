@@ -115,7 +115,7 @@ def update_user(usuario, form):
             usuario.fg_organization_id = form.fg_organization_id.data
             usuario.fg_patente_id = form.fg_patente_id.data
 
-            if usuario.nome_guerra in (usuario.nome_completo).split(" "):
+            if nome_guerra_presente(usuario.nome_guerra, usuario.nome_completo):
                 try:
                     db.session.merge(usuario)  # Atualiza os dados do usuário
                     db.session.commit()  # Salva as alterações no banco
@@ -141,7 +141,7 @@ def update_user(usuario, form):
             usuario.fg_organization_id = form.fg_organization_id.data
             usuario.fg_patente_id = form.fg_patente_id.data
 
-            if usuario.nome_guerra in (usuario.nome_completo).split(" "):
+            if nome_guerra_presente(usuario.nome_guerra, usuario.nome_completo):
                 try:
                     db.session.merge(usuario)  # Atualiza os dados do usuário
                     db.session.commit()  # Salva as alterações no banco
@@ -154,6 +154,17 @@ def update_user(usuario, form):
                     flash(f"Erro inesperado: {str(e)}", "danger")
             else:
                 flash("O nome de guerra deve pertencer ao nome completo.", "warning")
+
+def nome_guerra_presente(nome_guerra, nome_completo):
+    # Converter para maiúsculas e dividir em palavras
+    nome_guerra = nome_guerra.upper().split()
+    nome_completo = nome_completo.upper().split()
+    
+    # Percorre o nome_completo e verifica se nome_guerra aparece em sequência
+    for i in range(len(nome_completo) - len(nome_guerra) + 1):
+        if nome_completo[i:i + len(nome_guerra)] == nome_guerra:
+            return True
+    return False
 
 # ================================================= REGISTROS ===============================================================================
 

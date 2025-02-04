@@ -1,0 +1,23 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="row h-100">
+    <div class="col-4 mx-auto bg-white rounded-2 shadow p-4 my-auto">
+            <h2>Nova Senha</h2>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                {% if current_user.nivel != 3 %}
+                <label>{{ form.senha_atual.label }}</label>
+                {{ form.senha_atual(class="form-control") }}
+                {% endif %}
+                <br>
+                <label>{{ form.nova_senha.label }}</label>
+                {{ form.nova_senha(class="form-control") }}
+                <br>
+                <label>{{ form.confirmar_senha.label }}</label>
+                {{ form.confirmar_senha(class="form-control") }}
+                <br>
+                {{ form.submit(class="btn btn-success") }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

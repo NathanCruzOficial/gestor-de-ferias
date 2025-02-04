@@ -61,6 +61,9 @@
       <div class="">
         {{ form.submit(class="btn btn-primary my-3") }}
       </div>
+
+      <a href="{{ url_for('user.nova_senha',user_id=user_atual.id )}}" class="btn btn-outline-primary">Aterar Senha</a>
+      
       </form>
     </div>
   </div>

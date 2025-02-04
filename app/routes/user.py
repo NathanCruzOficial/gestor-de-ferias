@@ -177,7 +177,11 @@ def imprimir():
 
 
     # Buscar os resultados filtrados
-    vacations = query.join(User).order_by(Vacation.id.desc()).all()
+    if current_user.nivel == 3:
+        vacations = query.join(User).order_by(Vacation.id.desc()).all()
+    elif current_user.nivel == 2:
+        vacations = query.join(User).order_by(Vacation.id.desc()).filter(User.fg_organization_id == current_user.fg_organization_id).all()
+
 
     return render_template("user/imprimir.html", vacations=vacations)
 
@@ -192,7 +196,8 @@ def register():
     users = User.query.all()
     if form.validate_on_submit():
         if form.confirm_password.data == form.password.data:
-            if str(form.nome_guerra.data).upper() in str(form.nome_completo.data).upper().split(" "):
+            # if str(form.nome_guerra.data).upper().split(" ") in str(form.nome_completo.data).upper().split(" "):
+            if db_mannager.nome_guerra_presente(form.nome_guerra.data, form.nome_completo.data):
                 if not db_mannager.check_user_exists(form):
                     if not db_mannager.check_unique(form):
                         message,type = db_mannager.create_user(form)
@@ -274,6 +279,28 @@ def profile():
     
     else:
         return redirect(url_for("user.edit", user_id=current_user.id))
+    
+# Rota para redefinir a senha (USUÁRIO LOGADO)
+@user_bp.route('/nova-senha/<user_id>', methods=['GET', 'POST'])
+def nova_senha(user_id):
+    form = PasswordChangeForm()
+    user = User.query.filter_by(id=user_id).first()
+    if form.validate_on_submit():
+        print("foi")
+        if current_user.nivel == 3:
+            user.set_password(form.nova_senha.data)  # Define a nova senha
+            db_mannager.db_update(user)
+            flash(f"Senha do usuário: {user} alterada utilizando atributo de administrador!", "success")
+            return redirect(url_for("user.edit", user_id=user_id))
+        elif user and user.check_password(form.senha_atual.data):
+            user.set_password(form.nova_senha.data)  # Define a nova senha
+            db_mannager.db_update(user)
+            flash("Senha alterada com sucesso! Faça login.", "success")
+            return redirect(url_for('user.profile'))
+        else:
+            flash("Erro ao alterar a senha!", "danger")
+
+    return render_template('user/atualizar_senha.html', form=form)
 
 
 @user_bp.route('/delete_user/<int:user_id>', methods=['GET','POST'])

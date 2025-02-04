@@ -146,7 +146,7 @@ class ProfileForm(FlaskForm):
     submit = SubmitField('Salvar')
 
 class PasswordChangeForm(FlaskForm):
-    senha_atual = PasswordField("Senha Atual", validators=[DataRequired()])
+    senha_atual = PasswordField("Senha Atual")
     nova_senha = PasswordField("Nova Senha", validators=[DataRequired()])
     confirmar_senha = PasswordField("Confirme a Nova Senha", validators=[DataRequired(), EqualTo('nova_senha')])
     submit = SubmitField('Enviar')
