@@ -33,8 +33,8 @@
                     {{ form.data_inicio.label(class="input-group-text") }}
                     {{ form.data_inicio(class="form-control", id="data-inicio") }}
                 <p class="mx-2"></p>
-                    {{ form.data_fim.label(class="input-group-text") }}
-                    {{ form.data_fim(class="form-control", id="data-fim") }}
+                    {{ form.periodo.label(class="input-group-text") }}
+                    {{ form.periodo(class="form-control", id="periodo") }}
                 </div>
                 <div class="input-group my-1 ">
                     <label for="destino" class="input-group-text">Destino</label>
@@ -132,33 +132,6 @@
             dataFim.value = minValue;
         }
     });
-</script>
-<script>
-    // Função para calcular a diferença em dias
-    function calcularDias() {
-        // Pega os valores das datas de início e fim
-        var dataInicio = document.getElementById('data-inicio').value;
-        var dataFim = document.getElementById('data-fim').value;
-
-        // Se ambas as datas forem preenchidas, calcular a diferença
-        if (dataInicio && dataFim) {
-            var inicio = new Date(dataInicio);
-            var fim = new Date(dataFim);
-
-            // Verifica se a data de início é menor que a data de fim
-            if (inicio <= fim) {
-                var diffTime = fim - inicio;
-                var diffDays = diffTime / (1000 * 3600 * 24); // Converte de milissegundos para dias
-                document.getElementById('dias').textContent = 'Quantidade de dias: ' + diffDays;
-            } else {
-                document.getElementById('dias').textContent = 'A data de fim deve ser maior que a data de início.';
-            }
-        }
-    }
-
-    // Adiciona listeners para recalcular os dias sempre que o usuário mudar as datas
-    document.getElementById('data-inicio').addEventListener('input', calcularDias);
-    document.getElementById('data-fim').addEventListener('input', calcularDias);
 </script>
 
 {% endblock %}

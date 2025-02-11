@@ -105,6 +105,7 @@ class UpdateForm(FlaskForm):
             
 
 class VacationForm(FlaskForm):
+    periodo_dias = [('1', '30 dias'), ('2', '25 dias'), ('3', '20 dias'), ('4', '15 dias'), ('4', '10 dias'),('4', '5 dias')]
 
     data_inicio = DateField(
         "Data de Início",
@@ -115,19 +116,12 @@ class VacationForm(FlaskForm):
             'max': date(date.today().year, 12, 31).strftime('%Y-%m-%d')
         }
     )
-    data_fim = DateField(
-    "Data de Fim",
-    format='%Y-%m-%d',
-    validators=[DataRequired()],
-    render_kw={
-        'min': (date.today() + timedelta(days=2)).strftime('%Y-%m-%d'),  # Garantir que a data de fim seja pelo menos 1 dia após a de início
-        'max': date(date.today().year, 12, 31).strftime('%Y-%m-%d')  # Máximo: 31 de dezembro de 2025
-    }
-)
-    
-    destino = StringField("destino", validators=[DataRequired()])
+
+    periodo = SelectField("Período", choices=periodo_dias, validators=[DataRequired()])
+
+    destino = StringField("Destino", validators=[DataRequired()])
     motivo = TextAreaField("Motivo")
-    detalhes = StringField("detalhes")
+    detalhes = StringField("Detalhes")
     submit = SubmitField('Salvar')
 
     def validate_data_fim(self, field):

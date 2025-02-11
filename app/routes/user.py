@@ -27,14 +27,20 @@ def home():
     form = VacationForm()
    
     if form.validate_on_submit():
-        dias = (form.data_fim.data - form.data_inicio.data).days
+        fg_users_id = current_user.id
+        data_inicio = form.data_inicio.data
+        destino = form.destino.data
+        motivo = form.motivo.data
+        periodo = dict(form.periodo.choices).get(form.periodo.data, None)
+        periodo = int(periodo.split(" ")[0])
+        print(periodo)
+        data_fim = data_inicio + datetime.timedelta(days=periodo)
+        dias = (data_fim - data_inicio).days
+        data_fim = data_fim - datetime.timedelta(days=1)
+
         if current_user.dias_disp >= dias:
-            if current_user.dias_disp > 0:
-                fg_users_id = current_user.id
-                data_inicio = form.data_inicio.data
-                data_fim = form.data_fim.data
-                destino = form.destino.data
-                motivo = form.motivo.data
+            if current_user.dias_disp > 0:                
+
                 fg_states_id = 1
 
                 current_user.dias_disp = current_user.dias_disp - dias

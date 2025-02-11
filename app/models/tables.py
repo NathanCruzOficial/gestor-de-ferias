@@ -104,7 +104,6 @@ class Vacation(db.Model):
         self.data_inicio = data_inicio
         self.data_fim = data_fim
         self.data_registro = datetime.today()
-        self.data_retorno = data_fim + timedelta(days=1)
         self.destino = destino
 
         self.motivo = motivo
@@ -114,6 +113,15 @@ class Vacation(db.Model):
             self.dias = (self.data_fim - self.data_inicio).days
         else:
             self.dias = 0  # Ou outro valor padrão se as datas forem None
+
+        print("DIA DA SEMANA:   ",data_fim.weekday())
+
+        if data_fim.weekday() == 4:
+            self.data_retorno = data_fim + timedelta(days=3)   
+        elif data_fim.weekday() == 5:
+            self.data_retorno = data_fim + timedelta(days=2)
+        elif data_fim.weekday() == 6:
+            self.data_retorno = data_fim + timedelta(days=1)
 
     def __repr__(self):
         return f"<Vacation {self.id} for User {self.user.username}>"
