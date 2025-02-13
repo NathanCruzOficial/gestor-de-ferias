@@ -65,7 +65,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.username},id: {self.id}>"
 
-    def check_password(self, password):
+    def check_password(self, password="0"):
         return check_password_hash(self.password, password)  # Método para verificar a senha
     
     def set_password(self, password):

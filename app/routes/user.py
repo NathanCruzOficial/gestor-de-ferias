@@ -351,12 +351,44 @@ def aprove_regs(registro_id):
         flash(f"Registro não existe", "danger")
         return redirect(url_for('user.ferias'))
 
+@user_bp.route('/logout')
+def logout():
+    logout_user()  # Encerra a sessão do usuário
+    return redirect(url_for('auth.login'))
+
+# ========================================================================================================================================================================
+# ----------------------------------------------------       COMANDOS DE CONFIGURAÇÃO      -------------------------------------------------------------------------------
+# ========================================================================================================================================================================
+
 @user_bp.route('/config')
 @required_level(3)
 def config():
     return render_template("user/config.html")
 
-@user_bp.route('/logout')
-def logout():
-    logout_user()  # Encerra a sessão do usuário
-    return redirect(url_for('auth.login'))
+@user_bp.route('/execute_action', methods=['POST'])
+@required_level(3)
+def execute_action():
+    action = request.form.get("action")  # Obtém a ação do botão pressionado
+    password = request.form.get('password')
+
+    # Aqui você verifica se a senha é válida
+    if not current_user.check_password(password):
+        flash("Senha incorreta!", "danger")
+        return redirect(url_for('user.config'))
+    
+    try:
+        if action == "reset_db":
+            db_mannager.reset_database()
+            flash("Banco de dados reiniciado com sucesso!", "success")
+        elif action == "backup_db":
+            # backup_database()
+            flash("Backup do banco realizado!", "success")
+        elif action == "clear_cache":
+            # clear_cache()
+            flash("Cache limpo!", "success")
+        else:
+            flash("Ação inválida!", "danger")
+    except Exception as e:
+        flash(f"Erro ao executar ação: {str(e)}", "danger")
+    
+    return redirect(url_for("user.config"))

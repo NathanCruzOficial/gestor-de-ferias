@@ -4,8 +4,84 @@
 
 {% block content %}    
 
-<h1>Configurações</h1>
-<p>aqui você fará as configurações</p>
+ <!-- Formulário que envia a ação escolhida -->
+ <form id="actionForm" action="{{ url_for('user.execute_action') }}" method="post">
+   <!-- Botões para acionar o modal -->
+    <button type="button" class="btn btn-danger" onclick="showModal('reset_db')">Resetar Banco de Dados</button>
+    <button type="button" class="btn btn-warning" onclick="showModal('backup_db')">Fazer Backup</button>
+    <button type="button" class="btn btn-info" onclick="showModal('clear_cache')">Limpar Cache</button>
+</form>
 
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Confirmação</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <p id="modalMessage">Você tem certeza de que deseja realizar essa ação?</p>
+          
+          <!-- Campo para senha -->
+          <input type="password" id="passwordField" class="form-control" placeholder="Digite sua senha" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmActionButton">Confirmar</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script>
+    let currentAction = null;
+
+    // Função para mostrar o modal e definir a ação
+    function showModal(action) {
+        currentAction = action; // Define a ação a ser tomada
+        document.getElementById('modalMessage').innerText = `Você tem certeza de que deseja ${action}?`; 
+        $('#confirmationModal').modal('show'); // Mostra o modal
+    }
+
+    // Função para confirmar a ação
+    document.getElementById('confirmActionButton').addEventListener('click', function() {
+        const password = document.getElementById('passwordField').value;
+
+        if (!password) {
+            alert('Por favor, digite sua senha!');
+            return;
+        }
+
+        // Aqui você pode fazer uma chamada AJAX para validar a senha
+        if (validarSenha(password)) {
+            // Se a senha estiver correta, enviar o formulário ou executar a ação
+            // Atualiza o formulário com a ação escolhida e a senha
+            const form = document.getElementById('actionForm');
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = currentAction;
+
+            const passwordInput = document.createElement('input');
+            passwordInput.type = 'hidden';
+            passwordInput.name = 'password';
+            passwordInput.value = password;
+
+            form.appendChild(actionInput);
+            form.appendChild(passwordInput);
+            form.submit(); // Envia o formulário para o Flask
+            $('#confirmationModal').modal('hide'); // Fecha o modal
+        } else {
+            alert('Senha incorreta!');
+        }
+    });
+
+    // Função de validação da senha (Simulando)
+    function validarSenha(senha) {
+        // Aqui você deve fazer a validação real da senha (ex: uma requisição AJAX para o backend)
+        return senha === '1234';  // Senha simulada para o exemplo
+    }
+</script>
 
 {% endblock %}

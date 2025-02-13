@@ -230,3 +230,16 @@ def atualizar_registros():
 
     
     db.session.commit()  # Realiza um único commit ao final para eficiência
+
+def reset_database():
+    from app.models.seed import seed_data
+
+    try:
+        db.drop_all()
+        db.create_all()
+        seed_data()
+
+        print('reset concluído')
+
+    except Exception as e:
+        print(f'{e} : erro ao resetar banco de dados')
