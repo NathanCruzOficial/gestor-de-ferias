@@ -17,6 +17,9 @@ def redirect_if_authenticated(func):
 
 # Decorador - Limitador de nivel
 def required_level(level_required):
+    """
+    Middleware para retrigir acesso a página pelo nível do usuário.
+    """
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):

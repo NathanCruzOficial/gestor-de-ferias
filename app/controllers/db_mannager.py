@@ -168,6 +168,29 @@ def nome_guerra_presente(nome_guerra, nome_completo):
 
 # ================================================= REGISTROS ===============================================================================
 
+def periodo_disponivel(fg_users_id, data_inicio, data_fim):
+        from sqlalchemy import or_, and_
+        from datetime import timedelta
+
+        data_retorno = data_fim + timedelta(days=1)
+
+        # Verifica se já existem férias registradas nesse intervalo
+        conflito = Vacation.query.filter(
+            Vacation.fg_users_id == fg_users_id,
+            or_(
+                # Se data_inicio estiver dentro de outro período de férias
+                Vacation.data_inicio.between(data_inicio, data_retorno),
+                # Se data_fim estiver dentro de outro período de férias
+                Vacation.data_retorno.between(data_inicio, data_retorno),
+                # Se um período já registrado engloba completamente o novo período
+                and_(Vacation.data_inicio <= data_inicio, Vacation.data_retorno >= data_retorno)
+            )
+        ).first()
+        print(conflito)
+        return conflito is None  # Retorna True se não houver conflitos
+
+
+
 def atualizar_registros():
     registros = Vacation.query.all()
     

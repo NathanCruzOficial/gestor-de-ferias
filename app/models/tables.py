@@ -95,7 +95,7 @@ class Vacation(db.Model):
     state = db.relationship("State", back_populates='ferias')
 
 
-    def __init__(self, fg_users_id,fg_states_id, data_inicio, data_fim, destino, motivo):
+    def __init__(self, fg_users_id, data_inicio, data_fim, destino, motivo,fg_states_id=1):
 
         self.user = User.query.get(fg_users_id)
         self.state = State.query.get(fg_states_id)

@@ -1,6 +1,7 @@
 import datetime
 from sqlite3 import IntegrityError
 from app import db
+from app.models import manager
 from app.models.tables import Organizacao, Patente, Secao, User , Vacation , State
 from app.controllers import crud, db_mannager
 
@@ -39,26 +40,26 @@ def home():
         data_fim = data_fim - datetime.timedelta(days=1)
 
         if current_user.dias_disp >= dias:
-            if current_user.dias_disp > 0:                
-
-                fg_states_id = 1
-
+            if current_user.dias_disp > 0:
                 current_user.dias_disp = current_user.dias_disp - dias
 
-                registro_ferias = Vacation( fg_users_id, fg_states_id, data_inicio, data_fim, destino, motivo)
+                registro_ferias = Vacation( fg_users_id, data_inicio, data_fim, destino, motivo)
                 print(registro_ferias)
+
+                if db_mannager.periodo_disponivel(current_user.id, data_inicio, data_fim):
+                    try:
+                        crud.create(registro_ferias)
+                        db.session.merge(current_user)
+                        db.session.commit()
+                        flash('Registro de férias efetuado com sucesso', 'success')                
+                        return redirect(url_for("user.home"))
+                    
+                    except IntegrityError:
+                        db.session.rollback()
+                        flash('Erro de Integridade, tente novamente.', 'danger')
+                else:
+                    flash('Período indisponível para férias!', 'danger')  
                 
-                try:
-                    crud.create(registro_ferias)
-                    db.session.merge(current_user)
-                    db.session.commit()                    
-                except IntegrityError:
-                    db.session.rollback()
-                    flash('Erro de Integridade, tente novamente.', 'danger')
-
-
-                flash('Registro de férias efetuado com sucesso', 'success')
-                return redirect(url_for("user.home"))
             else:
                 flash(f'Seus dias de dispensa acabaram! você tem: {current_user.dias_disp} dias disponíveis', 'danger')
         else:
