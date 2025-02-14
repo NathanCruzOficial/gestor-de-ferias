@@ -382,10 +382,10 @@ def execute_action():
             flash("Banco de dados reiniciado com sucesso!", "success")
         elif action == "backup_db":
             # backup_database()
-            flash("Backup do banco realizado!", "success")
+            flash("work-in-progress!", "warning")
         elif action == "clear_cache":
             # clear_cache()
-            flash("Cache limpo!", "success")
+            flash("work-in-progress!", "warning")
         else:
             flash("Ação inválida!", "danger")
     except Exception as e:

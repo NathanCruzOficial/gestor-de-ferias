@@ -63,19 +63,19 @@ def seed_data():
     graduacao = [
         {"abrev": "SD", "posto": "Soldado"},
         {"abrev": "CB", "posto": "Cabo"},
-        {"abrev": "3SGT", "posto": "3º Sargento"},
-        {"abrev": "2SGT", "posto": "2º Sargento"},
-        {"abrev": "1SGT", "posto": "1º Sargento"},
+        {"abrev": "SGT", "posto": "3º Sargento"},
+        {"abrev": "SGT", "posto": "2º Sargento"},
+        {"abrev": "SGT", "posto": "1º Sargento"},
         {"abrev": "ST", "posto": "Sub Tenente"},
-        {"abrev": "2TEN", "posto": "2º Tenente"},
-        {"abrev": "1TEN", "posto": "1º Tenente"},
+        {"abrev": "TEN", "posto": "2º Tenente"},
+        {"abrev": "TEN", "posto": "1º Tenente"},
         {"abrev": "CAP", "posto": "Capitão"},
         {"abrev": "MAJ", "posto": "Major"},
         {"abrev": "TC", "posto": "Tenente Coronel"},
         {"abrev": "CEL", "posto": "Coronel"},
-        {"abrev": "GENBDA", "posto": "General de Brigada"},
-        {"abrev": "GENDIV", "posto": "General de Divisão"},
-        {"abrev": "GENEX", "posto": "General de Exército"}
+        {"abrev": "GEN BDA", "posto": "General de Brigada"},
+        {"abrev": "GEN DIV", "posto": "General de Divisão"},
+        {"abrev": "GEN EX", "posto": "General de Exército"}
     ]
     for rank_data in graduacao:
         rank = Patente(**rank_data)
@@ -97,19 +97,19 @@ def seed_data():
     # Dados iniciais para a tabela User
     users = [
         {
-            "username":"SDADMIN",
+            "username":"ADMIN",
             "password": "1234",  # Você pode armazenar uma hash da senha usando bcrypt ou similar
-            "military_id": "123456789",
+            "military_id": "0000000000",
             "fg_patente_id": 1,  # Relacionado ao ID da patente (exemplo: Soldado = 1)
-            "nome_completo": "NATHAN DA CRUZ CARDOSO",
-            "nome_guerra": "CRUZ",
-            "fg_organization_id": 1,  # Relacionado ao ID da organização (exemplo: "Cia C GUEs - 9ª Bda Inf Mtz")
-            "fg_secao_id": 1,  # Relacionado ao ID da seção
+            "nome_completo": "ADMIN",
+            "nome_guerra": "ADMIN",
+            "fg_organization_id": 2,  # Relacionado ao ID da organização (exemplo: "GUEs - 9ª Bda Inf Mtz")
+            "fg_secao_id": 26,  # Relacionado ao ID da seção
             "data_nascimento": data_nascimento,  # Formato string para facilitar conversão posterior
             "nivel": 3,  # 3 representa "Administrador"
             "dias_disp": 0,
-            "email": "admin@eb.mil.br",
-            "telefone": "21912345678"
+            "email": "secinfor@9bdainfmtz.eb.mil.br",
+            "telefone": "00000000000"
         }
     ]
     for user_data in users:
