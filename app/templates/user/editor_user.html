@@ -63,8 +63,6 @@
           {{ form.dias_disp(class="form-control",disabled=(current_user.nivel != 3), _name="dias_disp", id="dias_disp", placeholder="dias_disp") }}
         </div>
 
-      <hr>
-
       </div>
         <div class="col-5">
         <h1 class="h3 mb-3 fw-normal">Dados Pessoais</h1>
@@ -99,11 +97,14 @@
         <!-- <label class="form-text"> Preencha os dados com cuidado.</label> -->
 
         <!-- submit -->
-        <div class="">
-          {{ form.submit(class="btn btn-outline-success my-3") }}
-        </div>
+        <div class="hstack gap-3">
+          <button type="submit" class="btn btn-outline-success my-3">
+            <i class="bi bi-pencil"></i> Salvar Alterações
+        </button>
 
-        <a href="{{ url_for('user.nova_senha',user_id=user_atual.id )}}" class="btn btn-outline-primary">Aterar Senha</a>
+        <a href="{{ url_for('user.nova_senha',user_id=user_atual.id )}}" class="btn btn-outline-secondary">
+          <i class="bi bi-key"></i> Aterar Senha
+        </a>
         </form>
       </div>
   </div>

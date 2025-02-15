@@ -55,14 +55,13 @@
         {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="21912345678") }}
       </div>
 
-      <label class="form-text"> Preencha os dados com cuidado.</label>
-
       <!-- submit -->
-      <div class="">
-        {{ form.submit(class="btn btn-primary my-3") }}
-      </div>
+      <div class="hstack gap-3">
+        <button type="submit" class="btn btn-outline-success my-3">
+          <i class="bi bi-pencil"></i> Salvar Alterações
+      </button>
 
-      <a href="{{ url_for('user.nova_senha',user_id=user_atual.id )}}" class="btn btn-outline-primary">Aterar Senha</a>
+      <a href="{{ url_for('user.nova_senha',user_id=user_atual.id )}}" class="btn btn-outline-primary"><i class="bi bi-key"></i> Aterar Senha</a>
       
       </form>
     </div>

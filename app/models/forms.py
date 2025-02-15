@@ -87,7 +87,7 @@ class UpdateForm(FlaskForm):
     nivel = SelectField("nivel", choices=nvls, validators=[DataRequired()])
     email = StringField("email", validators=[DataRequired(), Email()])
     telefone = TelField("telefone",validators=[DataRequired()])
-    submit = SubmitField('Registrar')
+    submit = SubmitField('Salvar Alterações')
 
     def __init__(self, *args, **kwargs):
         super(UpdateForm, self).__init__(*args, **kwargs)
@@ -105,7 +105,7 @@ class UpdateForm(FlaskForm):
             
 
 class VacationForm(FlaskForm):
-    periodo_dias = [('1', '30 dias'), ('2', '25 dias'), ('3', '20 dias'), ('4', '15 dias'), ('4', '10 dias'),('4', '5 dias')]
+    periodo_dias = [('1', '30 dias'), ('2', '25 dias'), ('3', '20 dias'), ('4', '15 dias'), ('5', '10 dias'),('6', '5 dias')]
 
     data_inicio = DateField(
         "Data de Início",
@@ -122,7 +122,7 @@ class VacationForm(FlaskForm):
     destino = StringField("Destino", validators=[DataRequired()])
     motivo = TextAreaField("Motivo")
     detalhes = StringField("Detalhes")
-    submit = SubmitField('Salvar')
+    submit = SubmitField('Registrar')
 
     def validate_data_fim(self, field):
         if self.data_inicio.data and field.data < self.data_inicio.data:

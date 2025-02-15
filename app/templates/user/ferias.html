@@ -10,12 +10,13 @@
   <table class="table table-striped table-hover table-bordered align-middle">
     <thead class="table-dark text-center">
       <tr>
+        <th scope="col">Data do Registro</th>
         <th scope="col">Posto/Grad</th>
         <th scope="col">Usuário</th>
-        <th scope="col">Dias disponíveis</th>
-        <th scope="col">Data do Registro</th>
-        <th scope="col">Data de Início</th>
-        <th scope="col">Data de Fim</th>
+        <th scope="col">Dias</th>
+        <th scope="col">Início</th>
+        <th scope="col">Fim</th>
+        <th scope="col">Retorno</th>
         <th scope="col">Situação</th>
         <th scope="col">Ação</th>
       </tr>
@@ -24,12 +25,13 @@
       {% for ferias in registros %}
         <!-- Exibe o botão de deletar para todos, exceto o usuário logado -->
         <tr class="text-center">
+          <td class="table-active" >{{ ferias.data_registro }}</td>
           <td>{{ ferias.user.patente.posto }}</td>
           <td>{{ ferias.user.nome_guerra }}</td>
           <td>{{ ferias.dias }}</td>
-          <td class="table-active" >{{ ferias.data_registro }}</td>
           <td>{{ ferias.data_inicio }}</td>
           <td>{{ ferias.data_fim }}</td>
+          <td>{{ ferias.data_retorno }}</td>
           {% if ferias.state.id == 1 %}
           <td class="bg-secondary">{{ ferias.state.desc }}</td>
           {% elif ferias.state.id == 2 %}

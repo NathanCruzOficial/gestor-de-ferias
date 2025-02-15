@@ -1,6 +1,6 @@
 from datetime import datetime
 from app import app,db
-from app.models.tables import User, Vacation, Patente, Secao
+from app.models.tables import User, Vacation, Patente, State
 from app.controllers import crud
 from sqlalchemy.exc import IntegrityError
 from flask import flash
@@ -102,7 +102,7 @@ def update_user(usuario, form):
 
         if user_exists and user_exists == usuario and not data_exists:            
             # Atualiza os dados do usuário
-            usuario.username =  str(f"{patente}{form.nome_guerra.data}").upper()
+            usuario.username =  str(f"{patente} {form.nome_guerra.data}").upper()
             usuario.military_id = form.military_id.data
             usuario.nome_completo = str(form.nome_completo.data).upper()
             usuario.nome_guerra = str(form.nome_guerra.data).upper()
@@ -136,7 +136,7 @@ def update_user(usuario, form):
 
         elif not user_exists and not data_exists:
              # Atualiza os dados do usuário
-            usuario.username =  str(f"{patente}{form.nome_guerra.data}").upper()
+            usuario.username =  str(f"{patente} {form.nome_guerra.data}").upper()
             usuario.nome_guerra = str(form.nome_guerra.data).upper()
             usuario.fg_organization_id = form.fg_organization_id.data
             usuario.fg_patente_id = form.fg_patente_id.data
@@ -157,14 +157,12 @@ def update_user(usuario, form):
 
 def nome_guerra_presente(nome_guerra, nome_completo):
     # Converter para maiúsculas e dividir em palavras
-    nome_guerra = nome_guerra.upper().split()
-    nome_completo = nome_completo.upper().split()
-    
-    # Percorre o nome_completo e verifica se nome_guerra aparece em sequência
-    for i in range(len(nome_completo) - len(nome_guerra) + 1):
-        if nome_completo[i:i + len(nome_guerra)] == nome_guerra:
-            return True
-    return False
+    nome_guerra = set(nome_guerra.upper().split())
+    nome_completo = set(nome_completo.upper().split())
+
+    # Retorna True se todos os nomes de nome_guerra estiverem dentro de nome_completo
+    return nome_guerra.issubset(nome_completo)
+
 
 # ================================================= REGISTROS ===============================================================================
 
@@ -175,7 +173,7 @@ def periodo_disponivel(fg_users_id, data_inicio, data_fim):
         data_retorno = data_fim + timedelta(days=1)
 
         # Verifica se já existem férias registradas nesse intervalo
-        conflito = Vacation.query.filter(
+        conflito = Vacation.query.join(State).filter(
             Vacation.fg_users_id == fg_users_id,
             or_(
                 # Se data_inicio estiver dentro de outro período de férias
@@ -186,8 +184,16 @@ def periodo_disponivel(fg_users_id, data_inicio, data_fim):
                 and_(Vacation.data_inicio <= data_inicio, Vacation.data_retorno >= data_retorno)
             )
         ).first()
-        print(conflito)
-        return conflito is None  # Retorna True se não houver conflitos
+
+        restrict = ['analise','aprovada','consumindo','finalizado']
+
+        print(data_inicio,"    ",data_fim)
+        print(conflito.state.abrev)
+
+        if conflito.state.abrev in restrict:
+            return False
+        else:
+            return True
 
 
 

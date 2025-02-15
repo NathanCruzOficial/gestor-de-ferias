@@ -95,7 +95,7 @@ class Vacation(db.Model):
     state = db.relationship("State", back_populates='ferias')
 
 
-    def __init__(self, fg_users_id, data_inicio, data_fim, destino, motivo,fg_states_id=1):
+    def __init__(self, fg_users_id, data_inicio, data_fim, dias, destino, motivo,fg_states_id=1):
 
         self.user = User.query.get(fg_users_id)
         self.state = State.query.get(fg_states_id)
@@ -110,7 +110,7 @@ class Vacation(db.Model):
 
         # Verificando se as datas são válidas antes de calcular os dias
         if self.data_inicio and self.data_fim:
-            self.dias = (self.data_fim - self.data_inicio).days
+            self.dias = dias
         else:
             self.dias = 0  # Ou outro valor padrão se as datas forem None
 
@@ -120,7 +120,7 @@ class Vacation(db.Model):
             self.data_retorno = data_fim + timedelta(days=3)   
         elif data_fim.weekday() == 5:
             self.data_retorno = data_fim + timedelta(days=2)
-        elif data_fim.weekday() == 6:
+        else:
             self.data_retorno = data_fim + timedelta(days=1)
 
     def __repr__(self):

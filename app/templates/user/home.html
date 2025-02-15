@@ -14,7 +14,7 @@
             <hr>
             <p>
                 Posto: {{ current_user.patente.posto }} <br>
-                Dias disponíveis: {{ current_user.dias_disp }} dias <br>
+                Dias disponíveis: {{ current_user.dias_disp }}<br>
                 Identidade Militar : {{ current_user.military_id }}
             </p>
             <a href="{{ url_for('user.profile') }}" class="btn btn-outline-light"><i class="bi bi-person-circle"></i> Editar Perfil</a>
@@ -55,7 +55,7 @@
                 {% else %}
                 <div class="text-center">
                     <h1 class="h3 p-2 text-bg-warning text-white"> <strong>Aviso:</strong></h1>
-                    <h1 class="text-info text-black pt-lg-5 pt-3 h1"> <i class="bi bi-calendar-x"></i> <br> <strong> Seus dias de dispensa terminaram! </strong></h1>
+                    <h1 class="text-info text-black pt-lg-5 pt-3 h3"> <i class="bi bi-calendar-x h1"></i> <br> <br><strong> Você não possui dias disponíveis para registrar </strong></h1>
                 </div>
                 {% endif %}
             </form>
@@ -63,8 +63,8 @@
     </div>
 
 <!-- =======================================Histórico=========================================== -->
-    <div class="col-12 p-3">
-        <h3 class=" p-3">Historico</h3>
+    <div class="col-12 mt-3">
+        <h3>Histórico</h3>
             <!-- Contêiner com barra de rolagem -->
             <div style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
                 <table class="table table-sm table-striped">
@@ -74,6 +74,7 @@
                             <th>Dias</th>
                             <th>Data de Início</th>
                             <th>Data de Fim</th>
+                            <th>Retorno</th>
                             <th>Destino</th>
                             <th>Motivo</th>
                             <th>Status</th>
@@ -83,9 +84,10 @@
                         {% for f in ferias %}
                         <tr>
                             <td>{{ f.data_registro }}</td>
-                            <td>{{ f.dias }}</td>
+                            <td class="text-success">{{ f.dias }}</td>
                             <td>{{ f.data_inicio }}</td>
                             <td>{{ f.data_fim }}</td>
+                            <td class="text-success">{{ f.data_retorno }}</td>
                             <td>{{ f.destino }}</td>
                             <td>{{ f.motivo }}</td>
                             {% if f.state.id == 1 %}

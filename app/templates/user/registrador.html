@@ -93,7 +93,9 @@
 
         <!-- submit -->
         <div class="">
-          {{ form.submit(class="btn btn-primary my-3") }}
+          <button type="submit" class="btn btn-success my-3 w-100">
+            <i class="bi bi-person-vcard"></i> Registrar
+        </button>
         </div>
         </form>
       </div>
@@ -115,7 +117,6 @@
       <table class="table table-sm table-striped table-hover table-bordered align-middle">
         <thead class="table-dark text-center sticky-top">
           <tr>
-            <th scope="col">Id Militar</th>
             <th scope="col">OM</th>
             <th scope="col">P/G</th>
             <th scope="col">Nome</th>
@@ -129,7 +130,6 @@
         <tbody id="userTable">
           {% for user in users %}
               <tr class="text-center">
-              <td>{{ user.military_id }}</td>
               <td>{{ user.organizacao.abrev }}</td>
               <td>{{ user.patente.abrev }}</td>
               <td>{{ user.nome_guerra }}</td>
@@ -140,13 +140,13 @@
               <td>
                 <div class="hstak">
                 {% if current_user.id != user.id %}
-                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary" ><i class="bi bi-pencil-square" aria-hidden="true"> edit</i></a>
+                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary" ><i class="bi bi-pencil-square" aria-hidden="true"></i></a>
                   <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal" data-bs-target="#confirmationModal" data-user-id="{{ user.id }}">
-                    <i class="bi bi-trash3-fill" aria-hidden="true"> del</i>
+                    <i class="bi bi-trash3-fill" aria-hidden="true"></i>
                 </button>
                 
                 {% else %}
-                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-secondary w-100" disabled><i class="bi bi-person-fill"> perfil</i></a>
+                  <a href="{{ url_for('user.edit', user_id=user.id) }}" class="btn btn-primary w-100" disabled><i class="bi bi-person-fill"></i></a>
                 {% endif %}
                 </div>
               </td>

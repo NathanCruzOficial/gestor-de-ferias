@@ -34,26 +34,27 @@ def home():
         motivo = form.motivo.data
         periodo = dict(form.periodo.choices).get(form.periodo.data, None)
         periodo = int(periodo.split(" ")[0])
-        print(periodo)
         data_fim = data_inicio + datetime.timedelta(days=periodo)
+        print(data_fim)
         dias = (data_fim - data_inicio).days
+        print(dias)
         data_fim = data_fim - datetime.timedelta(days=1)
+        print(data_fim)
 
         if current_user.dias_disp >= dias:
             if current_user.dias_disp > 0:
-                current_user.dias_disp = current_user.dias_disp - dias
-
-                registro_ferias = Vacation( fg_users_id, data_inicio, data_fim, destino, motivo)
-                print(registro_ferias)
+                registro_ferias = Vacation( fg_users_id, data_inicio, data_fim, dias, destino, motivo)
 
                 if db_mannager.periodo_disponivel(current_user.id, data_inicio, data_fim):
                     try:
+                        current_user.dias_disp = current_user.dias_disp - dias
                         crud.create(registro_ferias)
                         db.session.merge(current_user)
                         db.session.commit()
                         flash('Registro de férias efetuado com sucesso', 'success')                
+                        print(30*"-","\n","passou2")
                         return redirect(url_for("user.home"))
-                    
+
                     except IntegrityError:
                         db.session.rollback()
                         flash('Erro de Integridade, tente novamente.', 'danger')
@@ -324,10 +325,14 @@ def delete_user(user_id):
 @user_bp.route('ferias/reprove/<int:registro_id>', methods=['GET','POST'])
 @required_level(3)
 def reprove_regs(registro_id):
-    registro = Vacation.query.get(registro_id)
+    registro = Vacation.query.join(User).filter(Vacation.id == registro_id).first()
+
     if registro and registro.fg_states_id == 1:
         registro.fg_states_id = 3
+        print(registro.user.dias_disp)
         registro.user.dias_disp = registro.user.dias_disp + registro.dias
+
+        print(registro.user.dias_disp)
 
         db.session.merge(registro)
         db.session.commit()
