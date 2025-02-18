@@ -27,7 +27,7 @@
       </div>
 
       <!-- remember-me -->
-      <div class="form-check mb-5 mt-4 justify-content-between hstack">
+      <div class="form-check mb-3 mt-4 justify-content-between hstack">
         <div>
         {{ form.remember_me(class="form-check-input",id="flexCheckDefault", type="checkbox") }}
         <label class="form-check-label" for="flexCheckDefault">Lembre-se de mim</label>
@@ -42,6 +42,7 @@
         <button type="submit" class="btn btn-primary btn-lg w-md-50 w-75">Entrar</button>
       </div>
       
+      <p class="text-center">Não possui um acesso? <a href="{{ url_for('auth.register') }}" class="text-primary text-decoration-none">Criar Conta</a>.</p>
         
     </form>
 

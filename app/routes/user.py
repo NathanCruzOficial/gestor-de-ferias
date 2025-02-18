@@ -35,11 +35,8 @@ def home():
         periodo = dict(form.periodo.choices).get(form.periodo.data, None)
         periodo = int(periodo.split(" ")[0])
         data_fim = data_inicio + datetime.timedelta(days=periodo)
-        print(data_fim)
         dias = (data_fim - data_inicio).days
-        print(dias)
         data_fim = data_fim - datetime.timedelta(days=1)
-        print(data_fim)
 
         if current_user.dias_disp >= dias:
             if current_user.dias_disp > 0:
@@ -52,7 +49,6 @@ def home():
                         db.session.merge(current_user)
                         db.session.commit()
                         flash('Registro de férias efetuado com sucesso', 'success')                
-                        print(30*"-","\n","passou2")
                         return redirect(url_for("user.home"))
 
                     except IntegrityError:

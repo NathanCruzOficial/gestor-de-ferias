@@ -1,8 +1,8 @@
-"""creation
+"""db_create
 
-Revision ID: 295e594b2925
+Revision ID: c416ef478b21
 Revises: 
-Create Date: 2025-01-25 17:08:21.112418
+Create Date: 2025-02-17 21:43:55.776690
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '295e594b2925'
+revision = 'c416ef478b21'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -61,21 +61,24 @@ def upgrade():
     sa.ForeignKeyConstraint(['fg_patente_id'], ['patentes.id'], ),
     sa.ForeignKeyConstraint(['fg_secao_id'], ['secoes.id'], ),
     sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email'),
     sa.UniqueConstraint('military_id'),
-    sa.UniqueConstraint('nome_completo')
+    sa.UniqueConstraint('nome_completo'),
+    sa.UniqueConstraint('telefone')
     )
     op.create_table('vacations',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('data_inicio', sa.Date(), nullable=False),
     sa.Column('data_fim', sa.Date(), nullable=False),
     sa.Column('data_registro', sa.Date(), nullable=False),
+    sa.Column('data_retorno', sa.Date(), nullable=False),
     sa.Column('destino', sa.String(length=30), nullable=False),
     sa.Column('motivo', sa.String(length=255), nullable=True),
     sa.Column('dias', sa.Integer(), nullable=False),
     sa.Column('fg_users_id', sa.Integer(), nullable=False),
     sa.Column('fg_states_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['fg_states_id'], ['states.id'], ),
-    sa.ForeignKeyConstraint(['fg_users_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['fg_states_id'], ['states.id'], ondelete='SET NULL'),
+    sa.ForeignKeyConstraint(['fg_users_id'], ['users.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

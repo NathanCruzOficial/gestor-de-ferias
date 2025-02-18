@@ -16,7 +16,10 @@
                 <label>{{ form.confirmar_senha.label }}</label>
                 {{ form.confirmar_senha(class="form-control") }}
                 <br>
+                <div class="hstack justify-content-between">
                 {{ form.submit(class="btn btn-success") }}
+                <a href="{{ url_for('reset.recuperar_senha') }}" class=" btn btn-sm btn-outline-secondary ">Esqueceu sua senha? </a>
+                </div>
             </form>
         </div>
     </div>

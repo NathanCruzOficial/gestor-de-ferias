@@ -1,0 +1,119 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Registrador{% endblock %}
+
+{% block head %}
+    <link href="{{ url_for('static', filename = 'css/sign-in.css')}}" rel="stylesheet" >
+{% endblock %}
+
+{% block content %}
+<div class="row" >
+
+<!-- ==================================== REGISTRO DE USUÁRIOS ============================================= -->
+  <div class="mx-auto col-10"> 
+    <!-- formulário -->
+    <form action="{{ url_for('auth.register') }}" method="post">
+      {{ form.csrf_token }}
+      <h1 class="h1 ps-5 fw-normal">Criar Conta</h1>
+      <hr class="mb-3">
+
+    <div class="row justify-content-center align-items-center"> 
+      <div class="col-5">
+
+        <!-- Campo OM -->
+        <label for="fg_organization_id" class="form-label">Organização:</label>
+        <div class="input-group mb-1">
+        {{ form.fg_organization_id(class="form-control", _name="fg_organization_id", id="fg_organization_id", placeholder="OM") }}
+        {{ form.fg_secao_id(class="form-control", _name="fg_secao_id", id="fg_secao_id", placeholder="Seção") }}
+        </div>
+
+        <!-- Campo Username -->
+        <div class="mb-1">
+          <label for="username" class="form-label">Nome de Guerra:</label>
+          <div class="input-group mb-1 ">
+            {{ form.fg_patente_id(class="form-control", _name="fg_patente_id", id="fg_patente_id", placeholder="p/g") }}
+            {{ form.nome_guerra(class="form-control  text-uppercase",_name="nome_guerra", id="nome_guerra", placeholder="Nome de Guerra") }}
+          </div>
+        </div>
+
+        <div class=" hstack justify-content-between">
+        <!-- Campo de Senha -->
+          <label for="password" class="form-label">Senha:</label>
+
+        <!-- Botão para alternar a visualização das senhas -->
+          <button type="button" class="btn btn-outline" id="togglePassword">
+              <i class="bi bi-eye" id="toggleIcon"></i>
+              <span> Mostrar Senhas</span>
+          </button>
+        </div>
+
+
+        {{ form.password(class="form-control mb-1", _name="password", id="password", placeholder="Digite sua Senha") }}
+        <!-- Campo de Confirmar Senha -->
+        {{ form.confirm_password(class="form-control", _name="confirm_password", id="confirm_password", placeholder="Confirme sua Senha") }}
+
+        </div>
+        <div class="col-5">
+
+        <!-- id militar -->
+        {{ form.military_id(class="mb-1 form-control", _name="military_id", id="military_id", placeholder="Identidade Militar") }}
+
+        <!-- nome_completo -->
+        {{ form.nome_completo(class="mb-1 form-control text-uppercase", _name="nome_completo", id="nome_completo", placeholder="Nome Completo") }}
+
+        <!-- data_nascimento -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="Data de Nascimento">{{ form.data_nascimento.label }}:</label>
+        {{ form.data_nascimento(class="form-control", _name="data_nascimento", id="data_nascimento", placeholder="Data de Nascimento") }}
+        </div>
+
+        <!-- email -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="email">Email:</label>
+          {{ form.email(class="form-control text-lowercase", _name="email", id="email", placeholder="@email.com ") }}
+        </div>
+
+        <!-- telefone -->
+        <div class="input-group mb-1">
+          <label class="input-group-text" for="telefone">Contato:</label>
+          {{ form.telefone(class="form-control", _name="telefone", id="telefone", placeholder="21912345678") }}
+        </div>
+
+        </div>
+        <!-- submit -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary mt-5 mb-4 w-25">Criar Conta</button>
+        </div>
+
+      </form>
+      <p class="text-center">Já possui uma conta? <a href="{{ url_for('auth.login') }}" class="text-primary text-decoration-none">Faça Login</a>.</p>
+      </div>
+  </div>
+  </div>
+
+</div> 
+
+<script>
+// JavaScript para alternar a visibilidade das senhas
+const toggleButton = document.getElementById("togglePassword");
+const toggleIcon = document.getElementById("toggleIcon");
+const passwordFields = [document.getElementById("password"), document.getElementById("confirm_password")];
+
+toggleButton.addEventListener("click", () => {
+  passwordFields.forEach(field => {
+    if (field.type === "password") {
+      field.type = "text";
+      toggleIcon.classList.remove("bi-eye");
+      toggleIcon.classList.add("bi-eye-slash");
+      toggleButton.querySelector("span").textContent = " Ocultar Senhas";
+    } else {
+      field.type = "password";
+      toggleIcon.classList.remove("bi-eye-slash");
+      toggleIcon.classList.add("bi-eye");
+      toggleButton.querySelector("span").textContent = " Mostrar Senhas";
+    }
+  });
+});
+
+</script>
+{% endblock %}

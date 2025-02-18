@@ -17,7 +17,7 @@ def create_user(form):
 
         dados = [
         {
-            "username":f"{patente}{form.nome_guerra.data}",
+            "username":f"{patente} {form.nome_guerra.data}",
             "password": form.password.data,  # Você pode armazenar uma hash da senha usando bcrypt ou similar
             "military_id": form.military_id.data,
             "fg_patente_id": form.fg_patente_id.data,  # Relacionado ao ID da patente (exemplo: Soldado = 1)
@@ -39,7 +39,7 @@ def create_user(form):
             db.session.add(novo_usuario)  # Adiciona
             db.session.commit()
 
-            return 'Registro realizado com sucesso!', 'success'
+            return f'Registro realizado com sucesso! Usuário: {novo_usuario.username}', 'success'
 
         except IntegrityError:
             return 'Dados Inválidos!', 'danger'
@@ -188,10 +188,12 @@ def periodo_disponivel(fg_users_id, data_inicio, data_fim):
         restrict = ['analise','aprovada','consumindo','finalizado']
 
         print(data_inicio,"    ",data_fim)
-        print(conflito.state.abrev)
 
-        if conflito.state.abrev in restrict:
-            return False
+        if conflito:
+            if conflito.state.abrev in restrict:
+                return False
+            else:
+                return True
         else:
             return True
 

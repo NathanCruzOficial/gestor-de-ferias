@@ -47,7 +47,7 @@ class RegisterForm(FlaskForm):
             'max': (date.today() - relativedelta(years=19)).strftime('%Y-%m-%d'),  # Máximo: data atual
             'min': (date.today() - relativedelta(years=130)).strftime('%Y-%m-%d')  # Mínimo: 100 anos atrás
         })
-    nivel = SelectField("nivel", choices=nvls, validators=[DataRequired()])
+    nivel = SelectField("nivel", choices=nvls, default=1)
     email = StringField("email", validators=[DataRequired(), Email()])
     telefone = TelField("telefone",validators=[DataRequired()])
     submit = SubmitField('Registrar')
@@ -84,7 +84,7 @@ class UpdateForm(FlaskForm):
             'max': (date.today() - relativedelta(years=19)).strftime('%Y-%m-%d'),  # Máximo: data atual
             'min': (date.today() - relativedelta(years=130)).strftime('%Y-%m-%d')  # Mínimo: 100 anos atrás
         })
-    nivel = SelectField("nivel", choices=nvls, validators=[DataRequired()])
+    nivel = SelectField("nivel", choices=nvls, default=1)
     email = StringField("email", validators=[DataRequired(), Email()])
     telefone = TelField("telefone",validators=[DataRequired()])
     submit = SubmitField('Salvar Alterações')

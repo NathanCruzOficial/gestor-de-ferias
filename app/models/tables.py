@@ -37,7 +37,7 @@ class User(db.Model, UserMixin):
     ferias = db.relationship("Vacation",  back_populates='user')
 
 
-    def __init__(self, password="1234", military_id=None, nome_completo=None, nome_guerra=None, data_nascimento=None, nivel=None, email=None, telefone=None, fg_patente_id=None, fg_organization_id=None, fg_secao_id=None,username=None, dias_disp=0):
+    def __init__(self, password="1234", military_id=None, nome_completo=None, nome_guerra=None, data_nascimento=None, nivel=1, email=None, telefone=None, fg_patente_id=None, fg_organization_id=None, fg_secao_id=None,username=None, dias_disp=0):
         
         # self.patente = Patente.query.get(fg_patente_id)
         # self.organizacao = Organizacao.query.get(fg_organization_id)
@@ -87,8 +87,8 @@ class Vacation(db.Model):
     motivo = db.Column(db.String(255))
     dias = db.Column(db.Integer, nullable=False)
 
-    fg_users_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    fg_states_id = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
+    fg_users_id = db.Column(db.Integer, db.ForeignKey('users.id',ondelete='CASCADE'), nullable=False)
+    fg_states_id = db.Column(db.Integer, db.ForeignKey('states.id',ondelete='CASCADE'), nullable=False)
     
 
     user = db.relationship("User", back_populates='ferias')

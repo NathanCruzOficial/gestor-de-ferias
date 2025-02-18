@@ -5,6 +5,7 @@
         <h2>Digite o Código</h2>
         <form method="POST">
             {{ form.hidden_tag() }}
+            <p>Um código foi enviado para o seu e-mail cadastrado.</p>
             <label>{{ form.codigo.label }}</label>
             {{ form.codigo(class="form-control") }}
             <br>
