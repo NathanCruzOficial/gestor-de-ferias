@@ -26,8 +26,10 @@
         <!-- Exibe o botão de deletar para todos, exceto o usuário logado -->
         <tr class="text-center">
           <td class="table-active" >{{ ferias.data_registro }}</td>
-          <td>{{ ferias.user.patente.posto }}</td>
-          <td>{{ ferias.user.nome_guerra }}</td>
+
+          <td>{{ ferias.user.patente.posto if ferias.user else "<span class='text-danger'>Desatrelado</span>" | safe }}</td>
+          <td>{{ ferias.user.patente.nome_guerra if ferias.user else "<span class='text-danger'>Desatrelado</span>" | safe }}</td>
+
           <td>{{ ferias.dias }}</td>
           <td>{{ ferias.data_inicio }}</td>
           <td>{{ ferias.data_fim }}</td>

@@ -1,8 +1,8 @@
-"""db_create
+"""init
 
-Revision ID: c416ef478b21
+Revision ID: 8a67eb63b6c3
 Revises: 
-Create Date: 2025-02-17 21:43:55.776690
+Create Date: 2025-04-08 13:22:45.232581
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c416ef478b21'
+revision = '8a67eb63b6c3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -44,9 +44,9 @@ def upgrade():
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('military_id', sa.String(length=30), nullable=False),
     sa.Column('username', sa.String(length=30), nullable=False),
     sa.Column('password', sa.String(length=255), nullable=False),
-    sa.Column('military_id', sa.String(length=30), nullable=False),
     sa.Column('nome_completo', sa.String(length=30), nullable=False),
     sa.Column('nome_guerra', sa.String(length=30), nullable=False),
     sa.Column('data_nascimento', sa.Date(), nullable=False),
@@ -75,10 +75,10 @@ def upgrade():
     sa.Column('destino', sa.String(length=30), nullable=False),
     sa.Column('motivo', sa.String(length=255), nullable=True),
     sa.Column('dias', sa.Integer(), nullable=False),
-    sa.Column('fg_users_id', sa.Integer(), nullable=False),
+    sa.Column('fg_users_id', sa.String(length=30), nullable=False),
     sa.Column('fg_states_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['fg_states_id'], ['states.id'], ondelete='SET NULL'),
-    sa.ForeignKeyConstraint(['fg_users_id'], ['users.id'], ondelete='SET NULL'),
+    sa.ForeignKeyConstraint(['fg_states_id'], ['states.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['fg_users_id'], ['users.military_id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

@@ -18,7 +18,7 @@ def create_user(form):
         dados = [
         {
             "username":f"{patente} {form.nome_guerra.data}",
-            "password": form.password.data,  # Você pode armazenar uma hash da senha usando bcrypt ou similar
+            "password": form.password.data.strip() if form.password.data else "null",  # Você pode armazenar uma hash da senha usando bcrypt ou similar
             "military_id": form.military_id.data,
             "fg_patente_id": form.fg_patente_id.data,  # Relacionado ao ID da patente (exemplo: Soldado = 1)
             "nome_completo": form.nome_completo.data,

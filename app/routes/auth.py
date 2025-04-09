@@ -13,11 +13,8 @@ auth_bp = Blueprint('auth', __name__)
 def login():
     # seed_data()
     form = LoginForm()
-    if form.validate_on_submit():        
-        username = str(form.username.data)
-        username = username.upper()
-
-        user = User.query.filter_by(username=username, fg_organization_id=form.fg_organization_id.data).first()
+    if form.validate_on_submit():
+        user = User.query.filter_by(military_id=form.military_id.data).first()
         if user:
             if user and user.check_password(form.password.data):  # Usando o método check_password
                 login_user(user)

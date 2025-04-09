@@ -16,26 +16,18 @@ def phone_validator(form, field):
         flash("Insira um número de celular válido.", 'warning')
 
 class LoginForm(FlaskForm):
-    fg_organization_id = SelectField("OM", choices=[], validators=[DataRequired()])
-    username = StringField("usuário", validators=[DataRequired()])
+    military_id = StringField("Identidade Militar", validators=[DataRequired()])
     password = PasswordField("password", validators=[DataRequired()])
     remember_me = BooleanField("remember_me")
     submit = SubmitField('Entrar')
 
-    def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
-        # Preenche o campo de patente com dados do banco
-        with app.app_context():
-            self.fg_organization_id.choices = [
-                (om.id, om.name) for om in Organizacao.query.all()
-            ]
 
 class RegisterForm(FlaskForm):
     nvls = [('1', 'Usuário'), ('2', 'Fiscal'), ('3', 'Administrador')]
 
     nome_guerra = StringField("nome_guerra", validators=[DataRequired()])
-    password = PasswordField("senha", validators=[DataRequired()])
-    confirm_password = PasswordField("confirmar senha", validators=[ DataRequired()])
+    password = PasswordField("senha")
+    confirm_password = PasswordField("confirmar senha")
 
     military_id = StringField("id militar", validators=[DataRequired()])
     fg_patente_id = SelectField("patente", choices=[], validators=[DataRequired()])
@@ -117,6 +109,37 @@ class VacationForm(FlaskForm):
         }
     )
 
+    periodo = SelectField("Período", choices=periodo_dias, validators=[DataRequired()])
+
+    destino = StringField("Destino", validators=[DataRequired()])
+    motivo = TextAreaField("Motivo")
+    detalhes = StringField("Detalhes")
+    submit = SubmitField('Registrar')
+
+    def validate_data_fim(self, field):
+        if self.data_inicio.data and field.data < self.data_inicio.data:
+            raise ValidationError("A data de fim não pode ser menor que a data de início.")
+    
+    def validate_max_dias(self, field):
+        if self.data_inicio.data and self.data_fim.data:
+            delta = (self.data_fim.data - self.data_inicio.data).days
+            if delta > field.data:
+                raise ValidationError("A quantidade de dias excede os disponíveis para o usuário.")
+            
+class VacationADM_Form(FlaskForm):
+    periodo_dias = [('1', '30 dias'), ('2', '25 dias'), ('3', '20 dias'), ('4', '15 dias'), ('5', '10 dias'),('6', '5 dias')]
+
+    data_inicio = DateField(
+        "Data de Início",
+        format='%Y-%m-%d',
+        validators=[DataRequired()],
+        render_kw={
+            'min': (date.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+            'max': date(date.today().year, 12, 31).strftime('%Y-%m-%d')
+        }
+    )
+
+    id_militar = StringField("Identidade Militar", validators=[DataRequired()])
     periodo = SelectField("Período", choices=periodo_dias, validators=[DataRequired()])
 
     destino = StringField("Destino", validators=[DataRequired()])

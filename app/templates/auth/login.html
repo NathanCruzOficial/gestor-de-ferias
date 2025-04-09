@@ -11,13 +11,10 @@
       <img class="mb-4" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="72" height="auto">
       <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
 
-      <!-- organzacão -->
-      {{ form.fg_organization_id(class="form-control mb-1", _name="fg_organization_id", id="fg_organization_id", placeholder="OM") }}
-
       <!-- username -->
       <div class="form-floating">
-        {{ form.username(class="form-control text-uppercase", _name="username", id="username", placeholder="Usuário") }}
-        <label for="username">Usuário</label>
+        {{ form.military_id(class="form-control text-uppercase", _name="military_id", id="military_id", placeholder="Identidade Militar") }}
+        <label for="username">Identidade Militar</label>
       </div>
 
       <!-- password -->

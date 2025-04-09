@@ -14,6 +14,15 @@ mailer = emails.NewEmail(API_KEY)
 reset_bp = Blueprint("reset", __name__)
 
 # 📌 Rota para solicitar o código de recuperação
+@reset_bp.route('/first', methods=['GET','POST'])
+def primeiro_acesso():
+    if user and user.check_password("null"):
+        flash("Bem Vindo, Primeiro Acesso.","danger")
+        return redirect(url_for('auth.login'))
+    ...
+
+
+
 @reset_bp.route('/recuperar-senha', methods=['GET', 'POST'])
 def recuperar_senha():
     form = ResetPasswordForm()

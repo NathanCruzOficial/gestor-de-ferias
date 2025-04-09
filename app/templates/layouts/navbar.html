@@ -3,6 +3,7 @@
   
   {% if current_user.nivel >= 2 %}
     <li><a href="{{ url_for('user.ferias') }}" class="nav-link {% if request.endpoint == 'user.ferias' %}text-white{% else %}text-secondary{% endif %}">Férias</a></li>
+    <li><a href="{{ url_for('user.livro') }}" class="nav-link {% if request.endpoint == 'user.livro' %}text-white{% else %}text-secondary{% endif %}">Férias</a></li>
      <li><a href="{{ url_for('user.imprimir') }}" class="nav-link ms-2 {% if request.endpoint == 'user.imprimir' %}text-white{% else %}text-secondary{% endif %}">Imprimir</a></li>
   {% endif %}
 

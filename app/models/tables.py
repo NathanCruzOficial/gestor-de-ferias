@@ -14,9 +14,10 @@ class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
+    military_id = db.Column(db.String(30), unique=True, nullable=False)
+
     username = db.Column(db.String(30), nullable=False)
     password = db.Column(db.String(255), nullable=False)  # Aumentando o tamanho para suporte a hash
-    military_id = db.Column(db.String(30), unique=True, nullable=False)
     nome_completo = db.Column(db.String(30), unique=True, nullable=False)
     nome_guerra = db.Column(db.String(30), nullable=False)
     data_nascimento = db.Column(db.Date, nullable=False)
@@ -87,7 +88,7 @@ class Vacation(db.Model):
     motivo = db.Column(db.String(255))
     dias = db.Column(db.Integer, nullable=False)
 
-    fg_users_id = db.Column(db.Integer, db.ForeignKey('users.id',ondelete='CASCADE'), nullable=False)
+    fg_users_id = db.Column(db.String(30), db.ForeignKey('users.military_id'), nullable=False)
     fg_states_id = db.Column(db.Integer, db.ForeignKey('states.id',ondelete='CASCADE'), nullable=False)
     
 
@@ -97,7 +98,7 @@ class Vacation(db.Model):
 
     def __init__(self, fg_users_id, data_inicio, data_fim, dias, destino, motivo,fg_states_id=1):
 
-        self.user = User.query.get(fg_users_id)
+        self.fg_users_id = fg_users_id
         self.state = State.query.get(fg_states_id)
 
    
@@ -124,7 +125,7 @@ class Vacation(db.Model):
             self.data_retorno = data_fim + timedelta(days=1)
 
     def __repr__(self):
-        return f"<Vacation {self.id} for User {self.user.username}>"
+        return f"<Vacation {self.id} for Military ID {self.fg_users_id}>"
 
 # ===================================================OMS============================================================================================
 # -------------------------------------------------------------------------------------------------------------------------------------------------------

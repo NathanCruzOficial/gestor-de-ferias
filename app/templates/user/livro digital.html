@@ -1,0 +1,99 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Livro Digital{% endblock %}
+
+{% block content %}    
+
+<!-- =======================================Registrar Férias ADMINISTRADOR=========================================== -->
+    <div class="col-lg-8 mt-lg-0 mt-2">
+        <div class="bg-white p-3 rounded-1 h-100 ">
+            <form action="{{ url_for('user.livro') }}" method="post">
+                {{ form.csrf_token }}
+
+                <h1 class="h3 p-2">Registrar Ferias</h1>
+                <div class="input-group my-1">
+                    <label for="identidade Militar" class="input-group-text">Identidade Militar</label>
+                    <input type="text" class="form-control" id="identidade Militar">
+                    <button type="button" class="btn btn-primary" onclick="buscarIdentidade()">Buscar</button>
+                </div>
+                
+                <div id="resultado" class="mt-3"></div>
+                
+
+
+
+                <hr>
+                <div class="input-group">
+                    {{ form.data_inicio.label(class="input-group-text") }}
+                    {{ form.data_inicio(class="form-control", id="data-inicio") }}
+                <p class="mx-2"></p>
+                    {{ form.periodo.label(class="input-group-text") }}
+                    {{ form.periodo(class="form-control", id="periodo") }}
+                </div>
+                <div class="input-group my-1 ">
+                    <label for="destino" class="input-group-text">Destino</label>
+                    {{ form.destino(class="form-control", id="destino") }}
+                </div>
+                <div class="input-group my-1 ">
+                    {{ form.motivo.label(class="input-group-text") }}
+                    {{ form.motivo(class="form-control", maxlength="250", style="resize: none;") }}
+                </div>
+                <div class="mb-3">
+                    <span class="form-label text-danger" id="dias"></span> <!-- Aqui vai aparecer o número de dias -->
+                </div>
+                <!-- submit -->
+                <div class="">
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+function buscarIdentidade() {
+    const identidade = document.getElementById("identidade Militar").value;
+
+    fetch("/user/buscar-identidade", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ identidade: identidade })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultado = document.getElementById("resultado");
+
+        if (data.found) {
+            resultado.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>Nome de Guerra:</strong> ${data.nome_guerra}<br>
+                    <strong>Posto/Graduação:</strong> ${data.posto}
+                </div>
+            `;
+        } else {
+            resultado.innerHTML = `
+                <div class="alert alert-warning">Identidade não encontrada. Preencha os dados abaixo:</div>
+                <div class="input-group my-1">
+                    <label class="input-group-text">Nome de Guerra</label>
+                    <input type="text" class="form-control" name="nome_guerra" />
+                </div>
+                <div class="input-group my-1">
+                    <label class="input-group-text">Posto/Graduação</label>
+                    <input type="text" class="form-control" name="posto" />
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error("Erro:", error);
+        alert("Ocorreu um erro na busca.");
+    });
+}
+</script>
+
+      
+
+
+{% endblock %}
+

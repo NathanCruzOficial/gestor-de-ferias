@@ -1,13 +1,16 @@
 import datetime
 from sqlite3 import IntegrityError
+
+from sqlalchemy import null
 from app import db
 from app.models import manager
 from app.models.tables import Organizacao, Patente, Secao, User , Vacation , State
 from app.controllers import crud, db_mannager
+from sqlalchemy.orm import joinedload
 
-from flask import Blueprint, render_template, redirect, url_for, flash, send_file, request
+from flask import Blueprint, render_template, redirect, url_for, flash, send_file, request, jsonify
 from flask_login import logout_user, current_user, login_required
-from app.models.forms import RegisterForm, UpdateForm, VacationForm,ProfileForm,PasswordChangeForm
+from app.models.forms import RegisterForm, UpdateForm, VacationForm,ProfileForm,PasswordChangeForm,VacationADM_Form
 from app.controllers import doc_create
 from .middlewares import required_level
 
@@ -24,11 +27,11 @@ def require_login():
 # Página principal
 @user_bp.route('/', methods=['GET', 'POST'])
 def home():
-    my_vacations = Vacation.query.filter_by(fg_users_id=current_user.id).order_by(Vacation.id.desc()).all()
+    my_vacations = Vacation.query.filter_by(fg_users_id=current_user.military_id).order_by(Vacation.id.desc()).all()
     form = VacationForm()
    
     if form.validate_on_submit():
-        fg_users_id = current_user.id
+        fg_users_id = current_user.military_id
         data_inicio = form.data_inicio.data
         destino = form.destino.data
         motivo = form.motivo.data
@@ -67,8 +70,121 @@ def home():
 @user_bp.route('/ferias')
 @required_level(2)
 def ferias():
-    vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
+    # vacations = Vacation.query.join(User).order_by(Vacation.id.desc()).all()
+    # vacations = Vacation.query.filter_by(fg_users_id=current_user.military_id).order_by(Vacation.id.desc()).all()
+    vacations = Vacation.query.options(joinedload(Vacation.user)).order_by(Vacation.id.desc()).all()
     return render_template("user/ferias.html", registros = vacations)
+
+
+# ------------------------------------------------------- LIVRO DIGITAL ---------------------------------------------------------------------
+@user_bp.route('/buscar-identidade', methods=['POST'])
+@required_level(2)
+def buscar_identidade():
+    data = request.get_json()
+    identidade = data.get('identidade')
+
+    militar = User.query.filter_by(military_id=identidade).first()
+
+    if militar:
+        return jsonify({
+            'found': True,
+            'nome_guerra': militar.nome_guerra,
+            'posto': militar.patente.posto
+        })
+    else:
+        return jsonify({'found': False})
+
+
+@user_bp.route('/livro', methods=['GET', 'POST'])
+@required_level(2)
+def livro():
+    form = VacationADM_Form()
+
+    fg_users_id = form.id_militar.data
+    militar = User.query.filter_by(military_id=fg_users_id).first()
+
+    if form.validate_on_submit():
+        #INFORMAÇÕES DAS FÉRIAS
+        data_inicio = form.data_inicio.data
+        destino = form.destino.data
+        motivo = form.motivo.data
+        periodo = dict(form.periodo.choices).get(form.periodo.data, None)
+        periodo = int(periodo.split(" ")[0])
+        data_fim = data_inicio + datetime.timedelta(days=periodo)
+        dias = (data_fim - data_inicio).days
+        data_fim = data_fim - datetime.timedelta(days=1)
+
+        if militar:
+            if militar.dias_disp >= dias:
+                if militar and militar.dias_disp > 0:
+                    registro_ferias = Vacation( fg_users_id, data_inicio, data_fim, dias, destino, motivo)
+
+                    if db_mannager.periodo_disponivel(militar.id, data_inicio, data_fim):
+                        try:
+                            militar.dias_disp = militar.dias_disp - dias
+                            crud.create(registro_ferias)
+                            db.session.merge(militar)
+                            db.session.commit()
+                            flash('Registro de férias efetuado com sucesso', 'success')                
+                            return redirect(url_for("user.home"))
+
+                        except IntegrityError:
+                            db.session.rollback()
+                            flash('Erro de Integridade, tente novamente.', 'danger')
+                else:
+                    flash('Período indisponível para férias!', 'danger')  
+                    
+            else:
+                flash(f'Os dias de dispensa deste militar acabaram! restam apenas: {militar.dias_disp} dias disponíveis', 'danger')
+
+        else:
+            registro_ferias = Vacation( fg_users_id, data_inicio, data_fim, dias, destino, motivo)
+
+            if db_mannager.periodo_disponivel(fg_users_id, data_inicio, data_fim):
+                try:
+                    #HAVERÁ QUE CRIAR TAMBÉM O USUÁRIO NO BANCO DE DADOS COM OS DADOS OBRIGATÓRIOS.
+                    dados = [
+                    {
+                        "username":"Desatrelado",
+                        "password": "null",  # Você pode armazenar uma hash da senha usando bcrypt ou similar
+                        "military_id": fg_users_id,
+                        "fg_patente_id": "Desatrelado",  # Relacionado ao ID da patente (exemplo: Soldado = 1)
+                        "nome_completo": "Desatrelado",
+                        "nome_guerra": "Desatrelado",
+                        "fg_organization_id": "Desatrelado",  # Relacionado ao ID da organização (exemplo: "Cia C GUEs - 9ª Bda Inf Mtz")
+                        "fg_secao_id": "Desatrelado",  # Relacionado ao ID da seção
+                        "data_nascimento": "Desatrelado",  # Formato string para facilitar conversão posterior
+                        "nivel": "Desatrelado",  # 3 representa "Administrador"
+                        "email": "Desatrelado",
+                        "telefone": "Desatrelado"
+                    }
+                    ]
+
+                    for user_data in dados:
+                        novo_usuario = User(**user_data)
+
+                    try:
+                        db.session.add(novo_usuario)  # Adiciona
+                        db.session.commit()
+
+                        crud.create(registro_ferias)
+                        flash(f'Registro de férias efetuado com sucesso na identidade:{fg_users_id}', 'success')                
+                        return redirect(url_for("user.livro"))
+                    
+                    except IntegrityError:
+                            return 'Dados Inválidos!', 'danger'
+
+                except IntegrityError:
+                    db.session.rollback()
+                    flash('Erro de Integridade, tente novamente.', 'danger')
+            else:
+                flash('Este usuário já possui férias cadastradas neste período!', 'danger')  
+                    
+            
+
+    return render_template("user/livro digital.html", form=form)
+
+
 
 # ------------------------------------------------------- IMPRIMIR ---------------------------------------------------------------------
 @user_bp.route('/imprimir/archive')
@@ -181,10 +297,11 @@ def imprimir():
 
 
     # Buscar os resultados filtrados
+    # vacations = Vacation.query.options(joinedload(Vacation.user)).order_by(Vacation.id.desc()).all()
     if current_user.nivel == 3:
-        vacations = query.join(User).order_by(Vacation.id.desc()).all()
+        vacations = query.options(joinedload(Vacation.user)).order_by(Vacation.id.desc()).all()
     elif current_user.nivel == 2:
-        vacations = query.join(User).order_by(Vacation.id.desc()).filter(User.fg_organization_id == current_user.fg_organization_id).all()
+        vacations = query.options(joinedload(Vacation.user)).order_by(Vacation.id.desc()).filter(User.fg_organization_id == current_user.fg_organization_id).all()
 
 
     return render_template("user/imprimir.html", vacations=vacations)
