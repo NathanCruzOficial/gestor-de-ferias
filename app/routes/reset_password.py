@@ -4,10 +4,10 @@ from app.models.tables import User
 from app.models.forms import ResetPasswordForm, VerifyCodeForm, NewPasswordForm
 import random
 from mailersend import emails
+import os
 
 # Configuração do MailerSend
-API_KEY = "mlsn.4d2b1b378a971b5e0bc56b83d7afaf90f17dab68453f524880d0c188e1342f7d"
-# API_KEY = "mlsn.ea6b1a42eb11f487892e1f003c41661864559e08048f434372563bc163b9de3f"
+API_KEY =  os.getenv("APIKEY_MAILSENDER")
 # Cria o cliente de API do MailerSend
 mailer = emails.NewEmail(API_KEY)
 
