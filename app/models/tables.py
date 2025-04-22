@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.String(30), nullable=False)
-    password = db.Column(db.String(255), nullable=False)  # Aumentando o tamanho para suporte a hash
+    password = db.Column(db.String(255), nullable=True)  # Aumentando o tamanho para suporte a hash
     military_id = db.Column(db.String(30), unique=True, nullable=False)
     nome_completo = db.Column(db.String(30), unique=True, nullable=False)
     nome_guerra = db.Column(db.String(30), nullable=False)
@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     dias_disp = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(30), unique=True, nullable=False)
     telefone = db.Column(db.String(30), unique=True, nullable=False)
+    last_login = db.Column(db.DateTime, default=None)
 
     fg_secao_id = db.Column(db.Integer, db.ForeignKey('secoes.id'), nullable=False)
     fg_organization_id = db.Column(db.Integer, db.ForeignKey('organizacoes.id'), nullable=False)
@@ -37,7 +38,7 @@ class User(db.Model, UserMixin):
     ferias = db.relationship("Vacation",  back_populates='user')
 
 
-    def __init__(self, password="1234", military_id=None, nome_completo=None, nome_guerra=None, data_nascimento=None, nivel=1, email=None, telefone=None, fg_patente_id=None, fg_organization_id=None, fg_secao_id=None,username=None, dias_disp=0):
+    def __init__(self, password=None, military_id=None, nome_completo=None, nome_guerra=None, data_nascimento=None, nivel=1, email=None, telefone=None, fg_patente_id=None, fg_organization_id=None, fg_secao_id=None,username=None, dias_disp=0):
         
         # self.patente = Patente.query.get(fg_patente_id)
         # self.organizacao = Organizacao.query.get(fg_organization_id)
@@ -49,7 +50,7 @@ class User(db.Model, UserMixin):
     
         self.username = str(username).upper()
         self.nome_guerra = str(nome_guerra).upper()
-        self.password = generate_password_hash(password)  # Armazenando a senha de forma segura
+        self.password = generate_password_hash(password) if password else None # Armazenando a senha de forma segura
         self.military_id = military_id
         self.nome_completo = str(nome_completo).upper()
         self.data_nascimento = data_nascimento

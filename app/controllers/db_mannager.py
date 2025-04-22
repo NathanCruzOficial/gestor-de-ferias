@@ -251,3 +251,8 @@ def reset_database():
 
     except Exception as e:
         print(f'{e} : erro ao resetar banco de dados')
+
+def update_join_date(user):
+    user.last_login = datetime.now()
+    db.session.commit()
+    pass

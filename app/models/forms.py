@@ -16,19 +16,10 @@ def phone_validator(form, field):
         flash("Insira um número de celular válido.", 'warning')
 
 class LoginForm(FlaskForm):
-    fg_organization_id = SelectField("OM", choices=[], validators=[DataRequired()])
     username = StringField("usuário", validators=[DataRequired()])
     password = PasswordField("password", validators=[DataRequired()])
     remember_me = BooleanField("remember_me")
     submit = SubmitField('Entrar')
-
-    def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
-        # Preenche o campo de patente com dados do banco
-        with app.app_context():
-            self.fg_organization_id.choices = [
-                (om.id, om.name) for om in Organizacao.query.all()
-            ]
 
 class RegisterForm(FlaskForm):
     nvls = [('1', 'Usuário'), ('2', 'Fiscal'), ('3', 'Administrador')]

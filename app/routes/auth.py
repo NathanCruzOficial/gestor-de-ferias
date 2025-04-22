@@ -17,10 +17,14 @@ def login():
         username = str(form.username.data)
         username = username.upper()
 
-        user = User.query.filter_by(username=username, fg_organization_id=form.fg_organization_id.data).first()
+        user = User.query.filter_by(username=username).first()
         if user:
-            if user and user.check_password(form.password.data):  # Usando o método check_password
-                login_user(user)
+            if user.password is None:
+                flash("Primeiro Login! Crie sua primeira senha.","warning")
+                return redirect(url_for('auth.login'))
+            elif user and user.check_password(form.password.data):  # Usando o método check_password
+                db_mannager.update_join_date(user)
+                login_user(user, remember=form.remember_me.data)
                 return redirect(url_for('user.home'))
             else:
                 flash("Senha incorreta.","danger")

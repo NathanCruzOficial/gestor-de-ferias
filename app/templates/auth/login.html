@@ -11,9 +11,6 @@
       <img class="mb-4" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="72" height="auto">
       <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
 
-      <!-- organzacão -->
-      {{ form.fg_organization_id(class="form-control mb-1", _name="fg_organization_id", id="fg_organization_id", placeholder="OM") }}
-
       <!-- username -->
       <div class="form-floating">
         {{ form.username(class="form-control text-uppercase", _name="username", id="username", placeholder="Usuário") }}
@@ -42,7 +39,7 @@
         <button type="submit" class="btn btn-primary btn-lg w-md-50 w-75">Entrar</button>
       </div>
       
-      <p class="text-center">Não possui um acesso? <a href="{{ url_for('auth.register') }}" class="text-primary text-decoration-none">Criar Conta</a>.</p>
+      <p class="text-center">Primeiro Acesso? <a href="{{ url_for('auth.register') }}" class="text-primary text-decoration-none">Clique Aqui</a>!</p>
         
     </form>
 
