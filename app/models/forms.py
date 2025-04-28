@@ -15,8 +15,16 @@ def phone_validator(form, field):
     if not re.match(r'^\+?[1-9]\d{1,14}$', phone_number):
         flash("Insira um número de celular válido.", 'warning')
 
-class LoginForm(FlaskForm):
+class Userform(FlaskForm):
     username = StringField("usuário", validators=[DataRequired()])
+    submit = SubmitField('Entrar')
+
+class FirstAcess(FlaskForm):
+    password = PasswordField("senha", validators=[DataRequired()])
+    confirm_password = PasswordField("confirmar senha", validators=[ DataRequired(),EqualTo('password', message='As senhas devem ser iguais.')])
+    submit = SubmitField('Entrar')
+
+class LoginForm(FlaskForm):
     password = PasswordField("password", validators=[DataRequired()])
     remember_me = BooleanField("remember_me")
     submit = SubmitField('Entrar')
@@ -26,7 +34,7 @@ class RegisterForm(FlaskForm):
 
     nome_guerra = StringField("nome_guerra", validators=[DataRequired()])
     password = PasswordField("senha", validators=[DataRequired()])
-    confirm_password = PasswordField("confirmar senha", validators=[ DataRequired()])
+    confirm_password = PasswordField("confirmar senha", validators=[ DataRequired(),EqualTo('password', message='As senhas devem ser iguais.')])
 
     military_id = StringField("id militar", validators=[DataRequired()])
     fg_patente_id = SelectField("patente", choices=[], validators=[DataRequired()])
@@ -133,7 +141,7 @@ class ProfileForm(FlaskForm):
 class PasswordChangeForm(FlaskForm):
     senha_atual = PasswordField("Senha Atual")
     nova_senha = PasswordField("Nova Senha", validators=[DataRequired()])
-    confirmar_senha = PasswordField("Confirme a Nova Senha", validators=[DataRequired(), EqualTo('nova_senha')])
+    confirmar_senha = PasswordField("Confirme a Nova Senha", validators=[DataRequired(), EqualTo('nova_senha', message='As senhas devem ser iguais.')])
     submit = SubmitField('Enviar')
 
 # Formulário para solicitar código de recuperação

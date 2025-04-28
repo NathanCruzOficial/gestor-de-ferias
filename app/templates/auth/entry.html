@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Login - Sistema de Férias{% endblock %}
+
+{% block content %}      
+  <div class="col-xl-3 col-lg-4 col-md-5 col-sm-7 col-8 m-auto p-2 align-content-center">
+
+    <!-- formulário -->
+    <form action="{{ url_for('auth.user') }}" method="post">
+      {{ form.csrf_token }}
+      <img class="mb-4" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="72" height="auto">
+      <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
+
+      <!-- username -->
+      <div class="form-floating">
+        {{ form.username(class="form-control text-uppercase", _name="username", id="username", placeholder="Usuário") }}
+        <label for="username">Usuário</label>
+      </div>
+
+
+      <!-- submit -->
+      <div class="d-flex justify-content-center mb-4">
+        <button type="submit" class="btn btn-primary btn-lg w-md-50 w-75 mt-3">Entrar</button>
+      </div>
+
+      <!-- remember-me -->
+      <div class="form-check mb-3 mt-4 justify-content-center hstack">
+
+        <a href="{{ url_for('reset.recuperar_senha') }}" class=" btn btn-sm btn-outline-secondary ">Esqueceu sua senha? </a>
+      </div>    
+        
+    </form>
+
+  </div> 
+{% endblock %}
