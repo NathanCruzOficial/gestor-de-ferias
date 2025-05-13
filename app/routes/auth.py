@@ -2,6 +2,7 @@ from app.models.tables import Organizacao, User
 from app.controllers import db_mannager
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_user, current_user
+from sqlalchemy import or_
 from app.models.forms import LoginForm, RegisterForm
 from app.models.seed import seed_data
 from .middlewares import redirect_if_authenticated
@@ -14,7 +15,7 @@ def login():
     # seed_data()
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(military_id=form.military_id.data).first()
+        user = User.query.filter(or_(User.military_id == form.military_id.data, User.email == form.military_id.data, User.telefone == form.military_id.data )).first()
         if user:
             if user and user.check_password(form.password.data):  # Usando o método check_password
                 login_user(user)

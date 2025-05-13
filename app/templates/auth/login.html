@@ -3,18 +3,19 @@
 {% block title %}Login - Sistema de Férias{% endblock %}
 
 {% block content %}      
-  <div class="col-xl-3 col-lg-4 col-md-5 col-sm-7 col-8 m-auto p-2 align-content-center">
+  <div class="col-xl-4 col-lg-5 col-md-6 col-sm-8 col-12 m-auto p-2 align-content-center my-2 bg-white rounded-3 shadow px-3 pt-3">
 
     <!-- formulário -->
     <form action="{{ url_for('auth.login') }}" method="post">
       {{ form.csrf_token }}
-      <img class="mb-4" src="https://www.9bdainfmtz.eb.mil.br/images/headers/logo.png" alt="" width="72" height="auto">
-      <h1 class="h3 mb-3 fw-normal">Sistema de Férias</h1>
+      <img src="{{ url_for('static', filename='src/logo.png') }}" alt="logo 9ª bda" width="60">
+      <h1 class="h1 fw-bold">SiCaFEx</h1>
+      <p class="mb-3" > Sistema de Cadastro de Férias do Exército</p>
 
       <!-- username -->
-      <div class="form-floating">
-        {{ form.military_id(class="form-control text-uppercase", _name="military_id", id="military_id", placeholder="Identidade Militar") }}
-        <label for="username">Identidade Militar</label>
+      <div class="form-floating mb-1">
+        {{ form.military_id(class="form-control", _name="military_id", id="military_id", placeholder="") }}
+        <label for="username">Id militar, email ou telefone</label>
       </div>
 
       <!-- password -->
@@ -36,7 +37,7 @@
 
       <!-- submit -->
       <div class="d-flex justify-content-center mb-4">
-        <button type="submit" class="btn btn-primary btn-lg w-md-50 w-75">Entrar</button>
+        <button type="submit" class="btn btn-primary btn-lg w-md-50 w-75 mt-3">Entrar</button>
       </div>
       
       <p class="text-center">Não possui um acesso? <a href="{{ url_for('auth.register') }}" class="text-primary text-decoration-none">Criar Conta</a>.</p>
