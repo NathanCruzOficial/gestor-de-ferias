@@ -3,7 +3,10 @@ from app import app,db
 from app.models.tables import User, Vacation, Patente, State
 from app.controllers import crud
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.inspection import inspect
 from flask import flash
+import pandas as pd
+from werkzeug.security import generate_password_hash
 
 def db_update(user):
     db.session.merge(user)
@@ -251,3 +254,116 @@ def reset_database():
 
     except Exception as e:
         print(f'{e} : erro ao resetar banco de dados')
+
+
+
+def processar_linha(row, index):
+    try:
+        military_id = str(row.get("military_id")).strip()
+        if not military_id:
+            raise ValueError("military_id obrigatório")
+
+        user_data = {
+            "username": str(row.get("username") or f"user{index}").upper(),
+            "password": generate_password_hash("1234"),  # sempre resetando a senha padrão
+            "military_id": military_id,
+            "nome_completo": str(row.get("nome_completo") or "NOME DESCONHECIDO").upper(),
+            "nome_guerra": str(row.get("nome_guerra") or "GUERRA").upper(),
+            "data_nascimento": pd.to_datetime(row.get("data_nascimento"), errors='coerce'),
+            "nivel": int(row.get("nivel") or 1),
+            "dias_disp": int(row.get("dias_disp") or 0),
+            "email": str(row.get("email") or f"user{index}@exemplo.com").lower(),
+            "telefone": str(row.get("telefone") or "00000000000"),
+            "fg_patente_id": int(row.get("fg_patente_id") or 1),
+            "fg_organization_id": int(row.get("fg_organization_id") or 1),
+            "fg_secao_id": int(row.get("fg_secao_id") or 1),
+        }
+
+        if pd.isna(user_data["data_nascimento"]):
+            raise ValueError("Data de nascimento inválida")
+
+        return user_data
+    except Exception as e:
+        print(f"[Erro na linha {index+2}] {e}")
+        return None
+
+
+def importar_usuarios_substituir_tudo(caminho_arquivo):
+    df = pd.read_excel(caminho_arquivo)
+
+    db.session.query(User).delete()
+    db.session.commit()
+
+    for index, row in df.iterrows():
+        user_data = processar_linha(row, index)
+        if not user_data:
+            continue
+        try:
+            user = User(**user_data)
+            db.session.add(user)
+        except exc.SQLAlchemyError as e:
+            print(f"[Erro ao inserir linha {index+2}] {e}")
+
+    db.session.commit()
+    print("Importação concluída com substituição total.")
+
+
+def importar_usuarios_atualizar(caminho_arquivo):
+    df = pd.read_excel(caminho_arquivo)
+
+    for index, row in df.iterrows():
+        user_data = processar_linha(row, index)
+        if not user_data:
+            continue
+
+        user = User.query.filter_by(military_id=user_data["military_id"]).first()
+
+        try:
+            if user:
+                # Atualiza campos existentes
+                for key, value in user_data.items():
+                    if key != "password":  # não atualiza senha automaticamente aqui
+                        setattr(user, key, value)
+                print(f"Usuário atualizado: {user_data['military_id']}")
+            else:
+                # Cria novo usuário
+                novo_user = User(**user_data)
+                db.session.add(novo_user)
+                print(f"Usuário criado: {user_data['military_id']}")
+        except exc.SQLAlchemyError as e:
+            print(f"[Erro ao processar linha {index+2}] {e}")
+
+    db.session.commit()
+    print("Importação concluída com atualização de dados.")
+
+def gerar_modelo_excel_usuarios(caminho_arquivo="modelo_usuarios.xlsx", incluir_exemplo=False):
+    # Inspeciona as colunas do modelo User
+    mapper = inspect(User)
+    colunas = [col.name for col in mapper.columns if col.name != "id"]
+
+    # Linha de exemplo (opcional)
+    dados_exemplo = {
+        "military_id": "123456",
+        "username": "EXEMPLO",
+        "password": "1234",
+        "nome_completo": "FULANO DA SILVA",
+        "nome_guerra": "FULANO",
+        "data_nascimento": "1990-01-01",
+        "nivel": 1,
+        "dias_disp": 10,
+        "email": "fulano@example.com",
+        "telefone": "21999999999",
+        "fg_patente_id": 1,
+        "fg_organization_id": 1,
+        "fg_secao_id": 1,
+    }
+
+    if incluir_exemplo:
+        df = pd.DataFrame([dados_exemplo])[colunas]
+    else:
+        df = pd.DataFrame(columns=colunas)
+
+    df.to_excel(caminho_arquivo, index=False)
+    print(f"Modelo salvo em: {caminho_arquivo}")
+
+    

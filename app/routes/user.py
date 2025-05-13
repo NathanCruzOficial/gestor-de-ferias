@@ -499,11 +499,14 @@ def execute_action():
             db_mannager.reset_database()
             flash("Banco de dados reiniciado com sucesso!", "success")
         elif action == "backup_db":
-            # backup_database()
+            db_mannager.gerar_modelo_excel_usuarios()
             flash("work-in-progress!", "warning")
         elif action == "clear_cache":
             # clear_cache()
             flash("work-in-progress!", "warning")
+        elif action == "populate_db":
+            # clear_cache()
+            flash("populando!", "warning")
         else:
             flash("Ação inválida!", "danger")
     except Exception as e:
